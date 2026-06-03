@@ -408,3 +408,254 @@ jobs:
 ```
 - Now, we need to create three secrets for Terraform Cloud in the GitHub Repo
 - Navigate to your Project Repo -> Settings
+
+
+##  Setting Up Jenkins, Docker, SonarQube, and Trivy for CI/CD
+
+### Introduction
+- In this part, we’ll turn a plain EC2 instance into a fully functional CI/CD control tower, capable of building, testing, and scanning code automatically. Think of it as teaching your pipeline to not just deploy, but deploy securely.
+
+### Objective
+- Set up a secure CI/CD environment that includes:
+  - Jenkins — the orchestrator
+  - Docker — container runtime for isolated builds
+  - SonarQube — code quality and static analysis
+  - Trivy — vulnerability scanner for images and dependencies
+  - kubectl — for upcoming Kubernetes integrations
+  - Slack notifications — so you know when things break (and when they don’t)
+- By the end, you’ll have a Jenkins-driven build pipeline ready to integrate into the larger DevSecOps flow.
+
+### Hands-On
+- As all four machines are running. We are going to start with the Jenkins Server to configure.
+- Select the Jenkins Server and connect with Session Manager
+
+<img width="720" height="206" alt="1_T-QRcU9Bj7Kt_i8gloQDow" src="https://github.com/user-attachments/assets/2cf73edd-fd6d-41bf-a2b6-ee8081ebb2e4" />
+
+- Log in as the ubuntu user
+```bash
+sudo su ubuntu
+cd
+```
+
+<img width="720" height="129" alt="1_1DAL0Yv7ZRIYpaaj6Rxz8Q" src="https://github.com/user-attachments/assets/4eafa21f-c157-4bce-9860-cd45ad005d2d" />
+
+- To install Jenkins , we need to install Java first.
+```bash
+sudo apt update
+sudo apt install fontconfig openjdk-21-jre -y
+java --version
+```
+
+<img width="720" height="295" alt="1_OzDJwN1tzAjtVhNtZgB6Ag" src="https://github.com/user-attachments/assets/02e4cd3e-880f-4fe9-8dd6-aaa4a2b118a1" />
+
+- Now, we will be going to install jenkins
+```bash
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update
+sudo apt install jenkins -y
+```
+
+<img width="720" height="367" alt="1_pcznsEufD2V_DVmyemufGg" src="https://github.com/user-attachments/assets/1288db09-d9d1-45d9-aa20-32f26e71440a" />
+
+- Let’s validate whether Jenkins is installed or not by accessing it.
+- Get the Public IP of your Jenkins Server and add the 8080 Port
+
+<img width="720" height="417" alt="1_Rg0PtJLSZrTb4_xBG_ji1A" src="https://github.com/user-attachments/assets/328731d5-ed1d-4da5-9254-b40a71c13f13" />
+
+- To get the password, go to the machine and run the command below
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+<img width="720" height="57" alt="1_3yivBdY9QLINg0X3GVZ8Wg" src="https://github.com/user-attachments/assets/246cbdc7-9120-461a-a023-0dfa60a20bc8" />
+
+- Click on Install suggested plugins to download the plugins
+
+<img width="720" height="418" alt="1_igZxCGqn8TLyx5zUbY5e2Q" src="https://github.com/user-attachments/assets/ed0f961e-4d2a-4fad-8f4e-b8822c0b4845" />
+
+- Now, we will create one user instead of using Admin
+- Provide the required information
+
+<img width="720" height="418" alt="1_en8FQAVsuBHCIvepAqYZKQ" src="https://github.com/user-attachments/assets/08189826-c09d-495b-836d-e8ed2f6ef842" />
+
+- Click on Save and Finish
+
+<img width="720" height="417" alt="1_ezyEv2uFWgA085zs2kIfQw" src="https://github.com/user-attachments/assets/03aed7a1-ee45-4da2-8eed-18bdc32af92f" />
+
+- We are ready with our Jenkins Server
+
+<img width="720" height="391" alt="1_CspSPHwSgYbvgTbcwMCHUg" src="https://github.com/user-attachments/assets/19296b79-02cb-4685-8764-faec48825078" />
+
+- Now, we have to install multiple tools on Jenkins, in which Docker is first.
+- Run the command below to install docker
+```bash
+sudo apt update
+sudo apt install docker.io -y
+sudo usermod -aG docker jenkins
+sudo usermod -aG docker ubuntu
+sudo systemctl restart docker
+sudo chmod 777 /var/run/docker.sock
+```
+
+<img width="720" height="287" alt="1_O1mLDBcVSd1ST2aSNYd6oA" src="https://github.com/user-attachments/assets/b34d2d3e-417b-4466-9138-905a0c5be5c5" />
+
+- After installing Docker, we will be going to install Sonarqube for Code Quality.
+- We have two options to install Sonarqube which are installing Sonarqube on EC2 directly or installing Sonarqubeusing Docker container
+- We will be using docker to install it Sonarqube
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube:community
+```
+<img width="720" height="181" alt="1_YTFPIHZt_WLAhTjrB1LbUg" src="https://github.com/user-attachments/assets/fdda6209-c48a-4a42-8316-f40fb7b0ade5" />
+
+- The Sonarqube docker container is running, and now we will access it using the Same Jenkins IP with Port 9000
+- To access SonarQube, the username and password are admin
+
+<img width="720" height="355" alt="1_1C8cHaQ4Hkif7FLCU4a_yg" src="https://github.com/user-attachments/assets/77b42bc9-25b1-45fa-8820-d8a6354cbe38" />
+
+- Update the password of your SonarQube
+
+<img width="720" height="244" alt="1_YHOpkOpdzxxGENNO2sa8Ng" src="https://github.com/user-attachments/assets/c2891141-0aed-4c9d-a4f9-c42300e99dab" />
+
+- Here is the SonarQube dashboard
+
+<img width="720" height="350" alt="1_3nZ71-U96z6t03JAlPnc9A" src="https://github.com/user-attachments/assets/e19c79bb-092a-4b44-87b6-cc2854900e8e" />
+
+- Now, we have to install our next tool, which is trivy
+```bash
+sudo apt-get install wget gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+trivy --version
+```
+
+<img width="720" height="273" alt="1_8JLP2lBPbuWrHGKZg8rabA" src="https://github.com/user-attachments/assets/637369a7-8f2b-43e9-8f97-b6604f37fce2" />
+
+- Now, we will install kubectl utility
+```bash
+curl -LO https://dl.k8s.io/release/v1.33.5/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/release/v1.33.5/bin/linux/amd64/kubectl.sha256
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+```
+<img width="720" height="157" alt="1_VTTPjX7dRfTvoQHbFeGZnw" src="https://github.com/user-attachments/assets/eaa2b28c-b7eb-42b9-8fbf-ace0d4987c73" />
+
+- Now, we will be setting up Slack for notification of our Pipelines whenever they finish with any status like Failed, Succeeded, or Aborted.
+- For that, we have to install the Jenkins plugin called Slack Notification
+
+<img width="720" height="144" alt="1_dUNgAOmL_iuZnCGNGZS3MQ" src="https://github.com/user-attachments/assets/9d28bca3-df41-4c91-ab9e-5e1ba34eb015" />
+
+- Plugin is installed. Check the Restart Jenkins options
+
+<img width="720" height="343" alt="1_FHeIQKki8x9EG9EL9trGeQ" src="https://github.com/user-attachments/assets/76ee88fb-6d82-4d5d-917e-1954b036f8ba" />
+
+- Now, we have to configure the authentication from the Slack side
+- Go to the Link: https://api.slack.com/apps and make sure you have already signed in with your official Slack account
+- Click on Create New App
+
+<img width="720" height="223" alt="1_M5ssCvCs-4hmiYnVTBbrDA" src="https://github.com/user-attachments/assets/f11aa5ff-89e2-41c7-abb6-ec5f2130956a" />
+
+- We will be creating an app using a manifest. So, click on it
+
+<img width="720" height="259" alt="1_sTD08oEMCzqjjGGHMy-EUg" src="https://github.com/user-attachments/assets/c82d3ba7-876d-447d-9899-cd970ad2abd3" />
+
+- Select the correct workspace for Slack
+
+<img width="720" height="262" alt="1_NJLWZFi_f2bgG2go_kVj8Q" src="https://github.com/user-attachments/assets/48b8f285-aa6a-4481-af5b-edbcf3f72326" />
+
+- We will be writing the manifest in YAML format. So, click on YAML and remove the existing/default manifest and replace it with the below manifest, and click on Next
+```yaml
+display_information:
+  name: Jenkins
+features:
+  bot_user:
+    display_name: Jenkins
+    always_online: true
+oauth_config:
+  scopes:
+    bot:
+      - channels:read
+      - chat:write
+      - chat:write.customize
+      - files:write
+      - reactions:write
+      - users:read
+      - users:read.email
+      - groups:read
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+```
+
+<img width="720" height="385" alt="1_-M13rOqP210HfrQQJUhlrQ" src="https://github.com/user-attachments/assets/1f0cbab5-6ee3-4b9c-9846-8e88c427dff5" />
+
+- Review the provided information and click on Create
+
+<img width="720" height="280" alt="1_8W6lm9-lbBtnIfw98TXXrg" src="https://github.com/user-attachments/assets/bceee056-365e-4df0-8f88-71522820f1fa" />
+
+- After creating the app, your app will look like this
+
+<img width="720" height="355" alt="1_MZzWv3joa0xFYISPfMSR8A" src="https://github.com/user-attachments/assets/73d9dc31-24c1-4d84-9f7b-b3aac34ac696" />
+
+- You can configure the Display information
+
+<img width="720" height="394" alt="1_6gGJ--6s8w7ImFIQXrW_JQ" src="https://github.com/user-attachments/assets/c67bec0f-612e-4745-be89-c6c52bfd940f" />
+
+- Now, install the App on our Slack workspace
+- Click on Install
+
+<img width="720" height="205" alt="1_mgvLSob00JNwvHlZc6DyGw" src="https://github.com/user-attachments/assets/6996a015-4fce-4ccd-986b-941d29c1b624" />
+
+- It will prompt you to reconfirm a few things. After confirming, click on Allow
+
+<img width="720" height="354" alt="1_EHp9PqDcZime8oIQrvHYgw" src="https://github.com/user-attachments/assets/c4712998-783c-4a59-a185-f7df9fcbe907" />
+
+- You will get the Bot User Token
+
+<img width="720" height="242" alt="1_W3P6Otgq-_PGX-Wb_Cc1Ag" src="https://github.com/user-attachments/assets/e42c8efa-8096-4f6c-afb9-679ee9eaf065" />
+
+- Also, if you check your Slack. You will see one app added called Jenkins
+
+<img width="720" height="142" alt="1_4Azh78DWsSMXF1VBsa4VJg" src="https://github.com/user-attachments/assets/dfb62b66-8656-46eb-ac06-2a9abcacc12f" />
+
+- Now, we have to copy the Bot User Token and use it in Jenkins
+- Go to the Jenkins -> Manage Jenkins -> System and look for Slack
+
+<img width="720" height="298" alt="1_z9DrRBG22B5CSZreHkaqKA" src="https://github.com/user-attachments/assets/d4077544-8909-4e68-9853-c79e438e2c3e" />
+
+- We have to add a secret by clicking on +Add, which we copied in the earlier steps
+- Click on Add
+
+<img width="720" height="372" alt="1_czl_pg-tRRXb2EIJ31W8jg" src="https://github.com/user-attachments/assets/849d49ed-5570-499d-85eb-3b9924a90bbe" />
+
+- After adding the secret, we have to invite the Jenkins app that we created in our Slack channel, as my channel is private. But if your channel is public, you don’t need to invite
+```bash
+/invite @Jenkins
+```
+<img width="720" height="261" alt="1_0iJFVZvh7b5UhO7jle3hRg" src="https://github.com/user-attachments/assets/808c2b87-8c64-42ad-9756-53b55bb95021" />
+
+- Now, add the workspace name and channel name of your Slack where you want to get the notification of your Jenkins Pipeline and test the connection. As you can see, our Test Connection is successful.
+
+<img width="720" height="290" alt="1_Ac4SK7K1bfsAK35J-vn2nw" src="https://github.com/user-attachments/assets/45577b0d-3055-4a9e-9659-d4da439bd8d5" />
+
+- You can also validate from here your Slack channel as it sends you a ping
+
+<img width="720" height="257" alt="1_wRZTMv5DWFgCczxzO_CB3g" src="https://github.com/user-attachments/assets/9ca17db3-07bc-4e8c-88aa-8b248a2df206" />
+
+- Once Slack is working fine, then click on Save and Apply
+
+<img width="720" height="378" alt="1_yomYx1uoTk5gvTL0Fbtslw" src="https://github.com/user-attachments/assets/2ad77f10-e475-4599-a6d6-3bd4e076cf06" />
+
+### Conclusion
+- With this setup, your DevOps engine is now fully functional and security-aware.
+- You’ve got Jenkins running with Docker, SonarQube, and Trivy — ready to handle real workloads and enforce quality gates automatically.
+
+
+
