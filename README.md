@@ -657,5 +657,207 @@ settings:
 - With this setup, your DevOps engine is now fully functional and security-aware.
 - You’ve got Jenkins running with Docker, SonarQube, and Trivy — ready to handle real workloads and enforce quality gates automatically.
 
+## Creating a Secure Jenkins Pipeline for Code Scanning and Docker Image Builds
 
+- Now in Part 3, it’s time to make Jenkins do some real work.
+- We’re building our first end-to-end pipeline — one that doesn’t just build and scan but also checks your dependencies, analyses your code, and even packages everything neatly into Docker images.
 
+### Objective
+- By the end of this part, you’ll have:
+  - A fully configured Jenkins pipeline that runs through multiple DevSecOps stages.
+  - Integrations for SonarQube, Trivy, OWASP Dependency Check, and Docker.
+  - A functional TMDB API key setup for your Netflix Clone microservice
+  - A robust pipeline flow — from checkout → code scan → dependency scan → Docker build → image scan → push to registry.
+
+### Hands-On
+- Now, we will install two Jenkins plugins:
+  - SonarQube Scanner - To Integrate with Sonar
+  - NodeJS - To build our code as it is NodeJS based application 
+
+<img width="720" height="204" alt="1__-jHixw0nElMTz5Oslmarw" src="https://github.com/user-attachments/assets/f41c0534-4b91-4877-872b-7c76d2110b00" />
+
+- Now, Restart your Jenkins
+
+<img width="720" height="262" alt="1_GDjKoWkV0d-KejPGoMfVpg" src="https://github.com/user-attachments/assets/2e614f58-0c0b-49c3-bb80-494f35262613" />
+
+- It’s time to configure the installed plugins
+- Go to the Tools section under Manage Plugins
+- Configure NodeJS by providing the desired name and using the compatible version, and click on Save and Apply
+
+<img width="720" height="391" alt="1_7Ba21WezSBCWkk3JoCdQag" src="https://github.com/user-attachments/assets/56e8f6d6-e8ff-4592-bf6f-91d7bd870a12" />
+
+- It’s time to configure SonarQube. So go to the Sonar dashboard. Click on User
+
+<img width="720" height="204" alt="1_snyhDAY5jp50oHhQ9T_vlw" src="https://github.com/user-attachments/assets/5369b882-3c51-45aa-b6ad-9aeea6b7b9cd" />
+
+- Click on the three dots showing under the Tokens
+
+<img width="720" height="161" alt="1_BLvpBl40_xHP_mYnQ1GA0Q" src="https://github.com/user-attachments/assets/27cd9adc-0006-4abf-8cf6-c794a67caaae" />
+
+- Provide the name of your token and copy the token
+
+<img width="720" height="345" alt="1_JfY5fsx0_h-P79hdOQ5T8Q" src="https://github.com/user-attachments/assets/52581780-3f17-44d9-bef5-90b4dba067db" />
+
+- Now, we have to add the copied token to Jenkins Secrets
+- Click on Add credentials
+
+<img width="720" height="167" alt="1_NOHSuVvLU9CT8yUT9wQpBg" src="https://github.com/user-attachments/assets/3ef1d5be-1ca4-4dc0-ac76-6ae3ee333916" />
+
+- Provide the correct secrets and other information, and click on Create
+
+<img width="720" height="329" alt="1_ZVZSHc9S1tXpkxmkzYIiYA" src="https://github.com/user-attachments/assets/cc96cddb-9ba4-4def-a8a9-ce8a32571bb7" />
+
+- Go to Manage Jenkins -> System
+- Click on Add SonarQube
+
+<img width="720" height="181" alt="1_aUothwzWqcwGw1gEJq8McA" src="https://github.com/user-attachments/assets/20c6b76a-c88c-4bac-858a-97ef9f927b0e" />
+
+- Please provide the name sonar-server with the Server URL and select the credentials that we have added.
+
+<img width="720" height="310" alt="1_K6lu9MKNo7acJ2Tv35CTgQ" src="https://github.com/user-attachments/assets/750346e6-b39f-4e55-8bb5-ed5bbfa45556" />
+
+- Now, we have to configure Sonar under the Tools section of Manage Plugins
+- Go to Manage Jenkins -> Tools
+
+<img width="720" height="154" alt="1_K3AhkPjhglREcHd7mNULzg" src="https://github.com/user-attachments/assets/13fd5bfb-d807-468a-9a98-6e3975ebacc7" />
+
+- Provide the name sonar-server and select the latest version of SonarQube.
+
+<img width="720" height="281" alt="1_qdI3c0GO-W6GcXu7p0MhoQ" src="https://github.com/user-attachments/assets/bb0c4cc4-8eea-40e3-b471-5422988adccb" />
+
+- Now, we need to create a webhook for Quality Gates. Click on Configuration and select Webhooks.
+
+<img width="720" height="154" alt="1_ZN50y5OJkRn6JbIEzrm4Lg" src="https://github.com/user-attachments/assets/87bffd37-6e59-49eb-a548-5c626af93df6" />
+
+- Click on Create
+
+<img width="720" height="183" alt="1_y4JNp3DDvBOSt0RS6hwv1w" src="https://github.com/user-attachments/assets/5a8cd294-ec67-4dab-8b24-ae340f3fe661" />
+
+- Provide the correct information for your Jenkins Server and click on Create
+
+<img width="720" height="343" alt="1_Q7KllgiPbS8fwG7y4-9PFQ" src="https://github.com/user-attachments/assets/bcc5bcaa-7879-4028-8956-6999f8442a79" />
+
+- The Webhook will be showing the below snippet
+
+<img width="720" height="210" alt="1_Lh7FrIrH7cu8seU7esOFZA" src="https://github.com/user-attachments/assets/86d65b15-7f3e-4e0c-94d0-7d5029cf8efc" />
+
+- Now, we will be creating the Project on SonarQube
+- Click on Create a local project
+
+<img width="720" height="307" alt="1_zHhLK5L-59Q5RXcVfDnFIw" src="https://github.com/user-attachments/assets/47177cff-cafc-4a28-8f9c-4829140e6c3b" />
+
+- Provide the correct information and click on Create
+
+<img width="720" height="261" alt="1_YV3B3YcNIoCronyJL31umQ" src="https://github.com/user-attachments/assets/910fc8a6-c214-43d0-abe8-91a11c82e8d9" />
+
+- Now, click on locally
+
+<img width="720" height="341" alt="1_LwHnEAaGZIjBJYJIAjdOsw" src="https://github.com/user-attachments/assets/ce7aa3cf-d452-4af1-894f-4dd194edef41" />
+
+- Provide the existing token for the project and click on Continue
+
+<img width="720" height="340" alt="1_a8A-Jm-WNHkckqhQzX5nDw" src="https://github.com/user-attachments/assets/73df2a33-e74e-41ff-874b-9fdd6c5d14b3" />
+
+- Select JS/TS & Web option as our application is NodeJS-based, and copy the provided commands, as we will be using them in our Jenkins Pipelines
+
+<img width="720" height="275" alt="1_Vn5sNyC58UWBQ70fZ1Vccw" src="https://github.com/user-attachments/assets/a8e75fdd-1749-40bb-b4a4-6b091b69a473" />
+
+- Now, it’s time to create our Jenkins Pipeline
+- Provide the name of your pipeline and select Pipeline as the Item type
+
+<img width="720" height="394" alt="1_GA7J3DrLhDZ5DLUspdJGHQ" src="https://github.com/user-attachments/assets/208e94d6-b737-49bd-9df7-a9d63890b253" />
+
+- We will be providing our Jenkins Pipeline Script from the GitHub Repo. Therefore, provide the information as written below
+
+<img width="720" height="381" alt="1_Q1Mq8aD5H0Lv3TtT9xhIAQ" src="https://github.com/user-attachments/assets/358e3488-8d1e-412e-bba4-c5ca09808cf6" />
+
+- If you see our Jenkins Pipeline has failed at OWASP DP Check, which means things are going as expected.
+- Why does it fail at the OWASP DP Check? Because we did not install & configure OWASP DP on Jenkins.
+
+<img width="720" height="207" alt="1_SH225wRIAv1wSXxOhNalxA" src="https://github.com/user-attachments/assets/45cb7552-42fb-449a-a895-4ace678daf35" />
+
+- Here is the Sonar Scan for our Application Code
+
+<img width="720" height="307" alt="1_8lthAzbRYP0wJx-nizOk8A" src="https://github.com/user-attachments/assets/3e77df58-315b-4a47-ab8f-bae1ecc89a06" />
+
+- Also, I got the notification on our Slack channel
+
+<img width="720" height="122" alt="1_vyTckK9loL8lZEJ3KgNO6A" src="https://github.com/user-attachments/assets/804b9e5e-d085-438e-9062-8fb671281849" />
+
+- Go to Manage Jenkins -> Plugins and look for OWASP, and download the plugin
+
+<img width="720" height="154" alt="1_wqnVDZVZ17ZCjAAlbzoEQA" src="https://github.com/user-attachments/assets/c55fbfc1-43e5-43bd-949b-0b6a79758dc5" />
+
+- Once you install the plugin, configure the OWASP DP Check tool
+- Go to Manage Plugins -> Tools and look for Dependency-Check
+- Make sure to select the Install Automatically and should be GitHub
+
+<img width="720" height="303" alt="1_Gv1NXewWVJmx-eIDSzzCJA" src="https://github.com/user-attachments/assets/613b9956-6584-45bd-8a77-b9df2a604206" />
+
+- Now, run the pipeline again
+
+<img width="720" height="322" alt="1_2AY9dEgTJ-sFM2hc0-4-lA" src="https://github.com/user-attachments/assets/64174b6c-3b29-4cb3-85e8-62dc08dcc423" />
+
+- Pipeline is Successful for OWASP
+
+<img width="720" height="244" alt="1_cycKRCm2gvaW5TdTSXkEnA" src="https://github.com/user-attachments/assets/b02c3fad-408b-4a7e-9845-22cdd9f4fa91" />
+
+- We got the slack alert
+
+<img width="720" height="242" alt="1_MC0MYkSa-7WXNZVohbp4Gg" src="https://github.com/user-attachments/assets/c3079306-eb91-45b2-8253-0201202ebe51" />
+
+- Validate DP Check
+
+<img width="720" height="220" alt="1_BREEJZRNxQNSxguFLkg3fA" src="https://github.com/user-attachments/assets/a2273125-c292-42c4-a9cb-53349eb95ec2" />
+
+<img width="720" height="383" alt="1_g8QGIlilmzfQzytvElc93Q" src="https://github.com/user-attachments/assets/975ffb16-c13e-47b7-922f-08e418dfbc07" />
+
+- As our Pipeline is failing, we have to set up Docker on our Jenkins
+- We have to add one credential for our Docker Hub, as we will be pushing our Docker images to Docker Hub
+- For that, we will have to generate a Personal Access Token
+
+<img width="720" height="243" alt="1_xlylbq8UD9UtetIwV3AS7w" src="https://github.com/user-attachments/assets/0209c26b-cf8f-4a61-810c-da006dcbbdcb" />
+
+- Once you have generated the PAT, add it to Jenkins
+
+<img width="720" height="393" alt="1_ZNGb9-OeVRU7kleqlLWzAA" src="https://github.com/user-attachments/assets/7b0d9656-3a81-409a-a46b-3cf4a18cd94f" />
+
+- Now, install the Docker plugin for building the images with Jenkins
+
+<img width="720" height="232" alt="1_Tbdk0dXR0JCiFmDkiuqKEA" src="https://github.com/user-attachments/assets/7a4f4e3a-1daf-4310-b117-ef2231278f80" />
+
+- Once the plugin is installed. Now, we have to get the API Key to watch some Netflix movies. So we will use TMDB to get the API- https://www.themoviedb.org/
+- You should create the account before using this.
+- Go to the Settings under your profile on TMDB
+
+<img width="720" height="340" alt="1_nLE5MVcmZByMNvGantmPJQ" src="https://github.com/user-attachments/assets/15d5a8b7-468c-4010-a496-40923474f8a7" />
+
+- Click on API
+
+<img width="720" height="245" alt="1_Dyj_NYnmQQli0GLsdc_Hhg" src="https://github.com/user-attachments/assets/878a3c98-ad21-4f8c-ad4a-48edf5d0c271" />
+
+- Now, we have new API Key
+
+<img width="720" height="302" alt="1_-2oU4_LKbHJdXIUM21kAaw" src="https://github.com/user-attachments/assets/3a383e4f-efc3-4543-955d-06b936b1fbec" />
+
+- Now, we will have to create credentials in our Jenkins for the TMBD API key
+
+<img width="720" height="336" alt="1_uB3NSmFTkDoqsgG8cgnW1w" src="https://github.com/user-attachments/assets/3066bd39-8213-4c3d-b4c2-b53c2fcf436b" />
+
+- After adding the secrets, we have to configure the Docker tool
+
+<img width="720" height="379" alt="1_w2G2ySs7yjxoc0oL2zKg6Q" src="https://github.com/user-attachments/assets/5957e4ec-633d-40b2-b5aa-544d3bf2b591" />
+
+- Now, run the pipeline again
+
+<img width="720" height="290" alt="1_wbglNVyuO0U6WnhH6Ttmmg" src="https://github.com/user-attachments/assets/3c2e970e-7c8a-44f3-ac77-e2fae7b95d4c" />
+
+<img width="720" height="229" alt="1_Ce7Kj1irJdndFKTZqsaCiQ" src="https://github.com/user-attachments/assets/4555ec55-9098-434c-8fc4-0538dbb842b6" />
+
+- You can see our Docker Image has been pushed to Docker Hub
+
+<img width="720" height="180" alt="1_bUfCR99vXRf69KgMob_BOA" src="https://github.com/user-attachments/assets/594620a5-00e1-4f98-b86e-813e3ba8d327" />
+
+### Conclusion
+- By now, you’ve transformed Jenkins from a static CI tool into a full-blown DevSecOps automation machine.
+- Your pipeline scans, builds, and packages your app like a pro — it just needs a Kubernetes cluster to complete the loop.
