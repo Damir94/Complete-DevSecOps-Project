@@ -861,3 +861,332 @@ settings:
 ### Conclusion
 - By now, you’ve transformed Jenkins from a static CI tool into a full-blown DevSecOps automation machine.
 - Your pipeline scans, builds, and packages your app like a pro — it just needs a Kubernetes cluster to complete the loop.
+
+## Deploying Applications on AWS Unmanaged Kubernetes Cluster
+
+### Introduction
+- we’ll go beyond automation and dive into the orchestration world by setting up an unmanaged Kubernetes cluster on AWS with one Master Node and one Worker Node.
+- This is where your Jenkins pipeline stops at “Deployment Failed” and starts saying "Deployment Successful."
+- Welcome to the part where your Netflix Clone finally comes to life — running inside containers, orchestrated by Kubernetes.
+
+### Objective
+- By the end of this part, you’ll:
+  - Set up an unmanaged Kubernetes cluster with Master and Worker nodes on AWS EC2.
+  - Connect your Jenkins pipeline with the cluster using kubectl and service accounts.
+  - Deploy your Netflix Clone microservice from Jenkins to Kubernetes.
+  - Fix the previous deployment failure and watch your CI/CD pipeline complete successfully.
+- This part bridges the gap between infrastructure and application — where automation meets orchestration.
+
+### Hands-On
+
+### Set up a Kubernetes Cluster using Kubeadm
+- Log in to the Master node and set the hostname
+```bash
+sudo hostnamectl set-hostname k8s-master
+```
+<img width="720" height="113" alt="1_f_6nnaSrAMf6-TxpzYvasQ" src="https://github.com/user-attachments/assets/1355a2a5-398c-4dfe-99f2-b32ccdc3f8fa" />
+
+- Log in to the Worker node and set the hostname
+```bash
+sudo hostnamectl set-hostname k8s-worker
+```
+<img width="720" height="111" alt="1_3BmUFvSXBwrU8-S0EEizSg" src="https://github.com/user-attachments/assets/75653cd8-e573-49b7-828e-f817d55cbd69" />
+
+- Both Node
+```bash
+export K8S_VER="1.33.5-00"
+export KUBEADM_K8S_VERSION="v1.33.5"
+```
+<img width="720" height="42" alt="1_PKmf6vOgWXjiE6Dh5LsHFQ" src="https://github.com/user-attachments/assets/f89236b9-576d-4047-a10a-1a7a9db2ecb6" />
+
+- Both Node
+```bash
+sudo swapoff -a
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+```
+
+```bash
+# load required kernel modules
+cat <<'EOF' | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+```
+
+```bash
+sudo modprobe overlay
+sudo modprobe br_netfilter
+```
+
+```bash
+# sysctl params required by k8s
+cat <<'EOF' | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+```
+
+```bash
+# apply sysctl params
+sudo sysctl --system
+```
+
+<img width="720" height="310" alt="1_-rVotvuC8-zNWchy12rUjg" src="https://github.com/user-attachments/assets/6a56b77a-ead3-4248-9e4a-93e03fd61d75" />
+
+- Both Node
+```bash
+# Install prerequisites
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release apt-transport-https
+```
+
+```bash
+# Add Docker/Containerd repo (using official Docker repo for containerd)
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+```bash
+sudo apt update
+sudo apt install -y containerd.io
+```
+
+```bash
+# Configure containerd and enable systemd cgroup driver
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml >/dev/null
+# Ensure SystemdCgroup = true (line may exist as "SystemdCgroup = false" - make deterministic)
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+```
+
+```bash
+# restart & enable
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+sudo systemctl status containerd --no-pager
+```
+
+<img width="720" height="192" alt="1_pC66Ulv3jitXsAqNiJVTMw" src="https://github.com/user-attachments/assets/bb9763af-aa4d-41dc-b8b3-32c3970fa6f2" />
+
+- Both Node
+```bash
+sudo su
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | \
+  gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+```
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] \
+https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /" | \
+tee /etc/apt/sources.list.d/kubernetes.list
+```
+
+```bash
+apt update
+```
+
+<img width="720" height="231" alt="1_BMN6YUZYUMD19WBopG3gSQ" src="https://github.com/user-attachments/assets/983d1bc4-6f80-4b58-93e3-914f4d3cf58f" />
+
+- Both Node
+```bash
+apt install -y kubelet kubeadm kubectl
+apt-mark hold kubelet kubeadm kubectl
+```
+
+<img width="720" height="316" alt="1_EKxyAHXGEawwri81h70ccA" src="https://github.com/user-attachments/assets/b897e203-d652-469b-a45b-f7d7ad39833c" />
+
+- On the Master node only
+```bash
+kubeadm init --pod-network-cidr=10.244.0.0/16
+```
+
+<img width="720" height="366" alt="1_JoFddJdMItdJYNrijz0kCQ" src="https://github.com/user-attachments/assets/92d3b940-c79f-4d4f-9d2f-3f302793ea60" />
+
+- On the Master node only
+```bash
+mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+<img width="720" height="29" alt="1_wiSgq15_R9ohmU1QFUE36g" src="https://github.com/user-attachments/assets/a6378321-218f-494b-92e3-8b3119788610" />
+
+- On the Master node only
+```bash
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+
+<img width="720" height="76" alt="1_E3lTtXumDJZ9TQo8o6Xpbg" src="https://github.com/user-attachments/assets/6e3dd7fb-7348-4aac-8280-9279c5c86c89" />
+
+- On the Master node only
+```bash
+kubectl get pods -A
+```
+
+<img width="720" height="94" alt="1_xkLkwG7gJ1mELevaNR3b5g" src="https://github.com/user-attachments/assets/d4ce8f2f-dff2-43b9-ab49-1cbeab3d3003" />
+
+- On the Master node only
+```bash
+kubectl get nodes
+```
+
+<img width="720" height="63" alt="1_BtWJ1JBMy3WslRRvKwduUQ" src="https://github.com/user-attachments/assets/4d5efa69-df3e-4962-b292-1ee64f343256" />
+
+- On the Worker node only
+```bash
+kubeadm join 10.0.35.70:6443 --token 8paztu.<token> \
+        --discovery-token-ca-cert-hash sha256:<digest>
+```
+
+<img width="720" height="160" alt="1_jQCa5VhsoO35CfMcqtVEPA" src="https://github.com/user-attachments/assets/a8bca018-9026-4aff-8acf-ca735c6698c8" />
+
+- Integrate K8S with Jenkins
+
+<img width="720" height="332" alt="1_ESiCIU0pCUXk9LMObFn1Aw" src="https://github.com/user-attachments/assets/d6b161fd-a451-4bbf-be87-02c273e492bb" />
+
+```bash
+sudo cat /etc/kubernetes/admin.conf
+```
+
+<img width="720" height="156" alt="1_s6WMbLTpyLkx4hlitImS8w" src="https://github.com/user-attachments/assets/70062691-3a75-4514-9a14-04ee8f4865ee" />
+
+<img width="720" height="345" alt="1_n-1iJUL3s6P8K3-VcPVarA" src="https://github.com/user-attachments/assets/a089db64-4b63-454d-9e3b-ec25100217f8" />
+
+- Search
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+```
+
+```bash
+sudo modprobe overlay
+sudo modprobe br_netfilter
+```
+
+```bash
+# sysctl params required by setup, params persist across reboots
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+```
+
+```bash
+# Apply sysctl params without reboot
+sudo sysctl --system
+```
+
+<img width="720" height="253" alt="1_WhpZPyHe4QFxL_cvOKlp-g" src="https://github.com/user-attachments/assets/f3d36707-428f-4cb6-984a-88db58d950ae" />
+
+```bash
+sudo swapoff -a
+(crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
+```
+
+<img width="720" height="29" alt="1_oNt3WL86HjCoKQeJkP33uw" src="https://github.com/user-attachments/assets/5f75095c-a0fc-4f39-a9bc-c9a44f7f46c4" />
+
+```bash
+# Root User
+sudo so
+# Kuernetes Variable Declaration
+KUBERNETES_VERSION=v1.33
+CRIO_VERSION=v1.33v
+```
+
+```bash
+# Apply sysctl params without reboot
+sudo sysctl --system
+```
+
+```bash
+sudo apt-get update -y
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+```
+
+```bash
+## Install CRIO Runtime
+sudo apt-get update -y
+apt-get install -y software-properties-common curl apt-transport-https ca-certificates
+```
+
+```bash
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+```
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
+    tee /etc/apt/sources.list.d/cri-o.list
+```
+
+```bash
+sudo apt-get update -y
+sudo apt-get install -y cri-o
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable crio --now
+sudo systemctl start crio.service
+```
+
+```bash
+echo "CRI runtime installed susccessfully"
+```
+
+<img width="720" height="336" alt="1_XYoPYw4R8G_w0pJN0fnyvQ" src="https://github.com/user-attachments/assets/737be250-0723-451c-b881-64083e816a10" />
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+```
+
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" | \
+sudo tee /etc/apt/sources.list.d/kubernetes.list
+```
+
+<img width="720" height="64" alt="1_DT-F6AmeY926ydA72yI5kw" src="https://github.com/user-attachments/assets/6619ab24-fb35-4f42-bd30-4c6fdea0e387" />
+
+```bash
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
+```
+
+<img width="720" height="220" alt="1_OGdci6nAfyUYnxEcMgPqWw" src="https://github.com/user-attachments/assets/510849a1-e834-44b3-9f40-4f893c575aac" />
+
+```bash
+systemctl restart kubelet.service
+systemctl enable kubelet.service
+```
+
+- Re-run the pipeline.
+
+<img width="720" height="395" alt="1_-xJeycq0KrPFqgYIgpxMkA" src="https://github.com/user-attachments/assets/fd249c1b-531f-44bd-9c88-3f27bbb670a6" />
+
+- Check the Pods and all resources of Kubernetes
+```bash
+kubectl get all -n default
+```
+
+<img width="720" height="150" alt="1_AXvnL9UTaH22FeE8VxWTig" src="https://github.com/user-attachments/assets/36f2fa8c-7680-4951-9bdf-18328f9e251c" />
+
+- Access the Application
+
+<img width="720" height="416" alt="1_hiGQC28LKZsO5agc8CvCMg" src="https://github.com/user-attachments/assets/e32c6ad9-d677-43d7-b16f-406161515adf" />
+
+### Conclusion — What’s Next
+- Your app’s now alive inside Kubernetes — scalable, containerised, and running smoothly.
+- We’ve officially completed the Dev + Sec + Ops integration pipeline from code to cluster.
+- We’ll shift gears to Monitoring and Observability — setting up Prometheus, Grafana, and Node Exporter to keep an eye on everything:
+  - Jenkins
+  - Kubernetes (Master + Worker)
+  - The monitoring server itself
