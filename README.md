@@ -1190,3 +1190,292 @@ kubectl get all -n default
   - Jenkins
   - Kubernetes (Master + Worker)
   - The monitoring server itself
+
+## Monitoring Jenkins and Kubernetes with Prometheus & Grafana
+
+### Introduction
+- we move from creation to observation.
+- This is where you’ll set up a full-fledged Monitoring and Alerting Stack for your DevSecOps ecosystem — so you can actually see your Jenkins jobs, Kubernetes workloads, and servers doing their thing in real time.
+
+### Objective
+- By the end of this part, you’ll have:
+  - A dedicated Monitoring Server running Prometheus and Grafana
+  -  Node Exporter configured on Jenkins, Kubernetes Master, and Worker nodes.
+  -  Kube State Metrics is integrated to monitor the entire K8S cluster.
+  -  Real-time dashboards tracking system health, resource usage, and performance trends.
+- In short, you’ll set up a monitoring system that not only shows what’s running but also warns you what’s about to break.
+
+### Hands-On
+
+- Update the server
+```bash
+sudo apt-get update
+```
+
+<img width="720" height="75" alt="1__FFiXnMWBwfOFU578l1JPA" src="https://github.com/user-attachments/assets/06b9ddb5-54e7-4331-baa8-1be468310b9a" />
+
+- Create a system user for Prometheus
+```bash
+sudo groupadd --system prometheus
+sudo useradd -s /sbin/nologin --system -g prometheus prometheus
+```
+
+<img width="720" height="73" alt="1_rx6wG_nI6Sc_KSxvocPi0w" src="https://github.com/user-attachments/assets/81c56447-b4b1-467e-afd8-cf28b8c6bb94" />
+
+- Create a directory for Prometheus
+```bash
+sudo mkdir /etc/prometheus
+sudo mkdir /var/lib/prometheus
+```
+
+<img width="720" height="76" alt="1_RUDo2EW_Ls40zWywFyajrw" src="https://github.com/user-attachments/assets/c31bf3d3-11d4-44c4-939d-5b99d7dbbc1a" />
+
+- Install the Prometheus binary
+```bash
+https://github.com/prometheus/prometheus/releases/download/v3.6.0/prometheus-3.6.0.linux-amd64.tar.gz
+```
+
+<img width="720" height="292" alt="1_-yMMIVvQZj9MbBfQtz4nmw" src="https://github.com/user-attachments/assets/72131c2a-4b1a-4b3e-964e-a9b384ab3707" />
+
+- Extract the binary using the command below
+```bash
+tar vxf prometheus*.tar.gz
+```
+
+<img width="720" height="166" alt="1_w5QJzRmbaJzoNqoFBGATPg" src="https://github.com/user-attachments/assets/489c17ce-a543-434b-8a1f-0b95f78fd90a" />
+
+- Navigate to the Prometheus directory
+```bash
+cd prometheus*/
+```
+
+<img width="720" height="46" alt="1_vTGYDgfL8df254sAzukCJg" src="https://github.com/user-attachments/assets/6e9a0dbb-241d-4eef-b46b-05244f0d7fa7" />
+
+- Move the prometheus and promtool binary files to the /usr/local/bin directory and update the ownership
+```bash
+sudo mv prometheus.yml /etc/prometheus/
+sudo chown prometheus:prometheus /etc/prometheus
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+```
+
+<img width="720" height="77" alt="1_QMSEMDISgPPjVsCuVb_tWA" src="https://github.com/user-attachments/assets/aa7ef5b8-05a1-4baf-9f0d-ffb666923633" />
+
+<img width="720" height="70" alt="1_Ic3hG_1DU5QC0C1cMTjOZw" src="https://github.com/user-attachments/assets/d8a2a0cc-5975-46e8-9c5f-14721f743a81" />
+
+- Create the Prometheus Systemd Service
+```bash
+sudo nano /etc/systemd/system/prometheus.service
+```
+
+```yaml
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+ --config.file=/etc/prometheus/prometheus.yml \
+ --storage.tsdb.path=/var/lib/prometheus/ \
+ --web.console.templates=/etc/prometheus/consoles \
+ --web.console.libraries=/etc/prometheus/console_libraries
+[Install]
+WantedBy=multi-user.target
+```
+
+<img width="720" height="364" alt="1_0MouXXjjiFjqgbP6Hj1uXQ" src="https://github.com/user-attachments/assets/56106809-baaf-4d33-addf-f9150244a519" />
+
+- Start the Prometheus service
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+```
+
+<img width="720" height="64" alt="1_9s6itCnOqXurnI2CWc-Rqw" src="https://github.com/user-attachments/assets/ff0fddf8-92c5-4125-b67f-251fd45f2cf8" />
+
+- Check the status of the Prometheus service
+```bash
+sudo systemctl status prometheus
+```
+
+<img width="720" height="201" alt="1_4Vtu53oz8yd2Yrtp9tRNdQ" src="https://github.com/user-attachments/assets/126a7404-ffb7-4bf0-ac75-622afd0ce71a" />
+
+- Access the Prometheus UI
+
+<img width="720" height="222" alt="1_ASDskEGverM1pkMvqaYLJg" src="https://github.com/user-attachments/assets/8a190826-3b91-493f-ad04-a664bc421c51" />
+
+- Download Node Exporter package
+```bash
+wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz
+```
+
+<img width="720" height="274" alt="1_PGeEvPRuIyCaUU6vLbGQKg" src="https://github.com/user-attachments/assets/04d713c4-c2f3-4259-bf55-9f09a4b960ec" />
+
+- Unzip the node exporter file
+```bash
+sudo tar xvfz node_exporter-*.*-amd64.tar.gz
+```
+
+<img width="720" height="83" alt="1_jzTl4E-pL_RiitVKNR5DkQ" src="https://github.com/user-attachments/assets/9d423126-5860-4a72-94c8-be2f6507715e" />
+
+- Create the node_exporter user
+```bash
+sudo useradd -rs /bin/false node_exporter
+```
+
+- Move the package and provide the necessary permissions
+```bash
+sudo mv node_exporter-*.*-amd64/node_exporter /usr/local/bin/
+sudo chmod +x /usr/local/bin/node_exporter
+sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
+```
+
+<img width="720" height="148" alt="1_Pmpt2GNRqZ9BbSv7NsCJ4w" src="https://github.com/user-attachments/assets/9b531549-ce85-4676-8751-ba4851f5be98" />
+
+- Create a Node Exporter systemd service
+```bash
+sudo nano /etc/systemd/system/node_exporter.service
+```
+
+```yaml
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+<img width="720" height="194" alt="1_By8gPEhwasIRtDcH1idHxg" src="https://github.com/user-attachments/assets/237e13a5-7e8a-4093-ad9b-f3bc0c2205ea" />
+
+- Enable the Node Exporter service and start the service
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start node_exporter
+sudo systemctl enable node_exporter
+sudo systemctl status node_exporter
+```
+
+<img width="720" height="194" alt="1_By8gPEhwasIRtDcH1idHxg" src="https://github.com/user-attachments/assets/ad01f6aa-1975-4cd7-9740-2a7958b923a6" />
+
+- Edit the Prometheus service and node exporter to scrape its metrics
+```bash
+sudo vim /etc/prometheus/prometheus.yml
+cat /etc/prometheus/prometheus.yml
+```
+
+```yaml
+- job_name: 'Node_Exporter'
+  scrape_interval: 5s
+  static_configs:
+    - targets: ['34.200.245.177(MonotoringServerIP):9100']
+```
+
+<img width="720" height="210" alt="1_48mOC9_IW3YvFVP6jRzjUw" src="https://github.com/user-attachments/assets/d164bc3e-b1fe-4b26-a737-adaab14a1b89" />
+
+- As we made some changes in the configurations, we have to restart the Prometheus server
+```bash
+sudo systemctl restart prometheus
+sudo systemctl status prometheus
+```
+
+<img width="720" height="128" alt="1_inpoc4xm9U9k8mYDAm3Kbw" src="https://github.com/user-attachments/assets/140515c8-c92a-4d22-aa7f-06999c020294" />
+
+- Check the Prometheus Dashboard
+
+<img width="720" height="231" alt="1_yad5JBzeu2MGtQGiNqBcYQ" src="https://github.com/user-attachments/assets/7d5fe148-e6d1-49c9-b98d-aeb20bb2c413" />
+
+- Now, we can validate the metrics using the curl command
+```bash
+curl http://34.200.245.177:9100/metrics
+```
+
+<img width="720" height="131" alt="1_0fZjdqYj2uPwljoRQsaP6g" src="https://github.com/user-attachments/assets/47c73a3c-f328-48a4-ba95-5f6f1dd4c122" />
+
+- Configure the Grafana key
+```bash
+sudo mkdir -p /etc/apt/keyrings/
+wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null
+```
+
+<img width="720" height="34" alt="1_ClrRdF5L6Bp6ulSEIlvTFA" src="https://github.com/user-attachments/assets/f67a8c65-5012-4de9-87a6-04400a701806" />
+
+- Configure the Grafana repo
+```bash
+echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+# Updates the list of available packages
+sudo apt-get update
+```
+
+<img width="720" height="130" alt="1_OggMTEWse-Re-7WftdLOwQ" src="https://github.com/user-attachments/assets/1c64f358-e964-4843-8a2d-3d2aee6b154d" />
+
+- Install Grafana using the command below
+```bash
+sudo apt-get install grafana -y
+```
+
+<img width="720" height="225" alt="1_eBssCUPrBTCuVcQBo2zJdQ" src="https://github.com/user-attachments/assets/018faba2-e8b9-4603-bc3e-a89035d525fa" />
+
+- Now, enable the grafana service and start it
+```bash
+sudo systemctl enable grafana-server.service
+sudo systemctl start grafana-server.service
+sudo systemctl status grafana-server.service
+```
+
+<img width="720" height="175" alt="1_EOMTdYqxfliwvjHdy836_A" src="https://github.com/user-attachments/assets/a0d274bd-e136-4c9a-8355-954f7464ab95" />
+
+- Now, we access the Grafana UI
+
+<img width="720" height="418" alt="1_DUEZ2MZ-aghw-Q8ChL9JJg" src="https://github.com/user-attachments/assets/2a6c9870-05b7-4647-b0ec-1ad2b857a6af" />
+
+- Here we can see our Grafana dashboard
+
+<img width="720" height="395" alt="1_ZMJJKl5DKA8Mo8cW-tTFMQ" src="https://github.com/user-attachments/assets/330bb9e5-8f46-4387-a64f-ba495328d16f" />
+
+- Click on Connections and go to Data sources
+
+<img width="720" height="262" alt="1_X-BI2lWZUWxKeRsz8LDiqA" src="https://github.com/user-attachments/assets/f8a87c0b-910f-485b-a542-974ae900961f" />
+
+- Select Prometheus as data source
+
+<img width="720" height="282" alt="1_Nkx_i4gcPTh6XowW4tUPjA" src="https://github.com/user-attachments/assets/1bce88a4-420a-498a-8df2-ecb3bc3a0421" />
+
+- Now, provide the correct Prometheus server URL
+
+<img width="720" height="370" alt="1_nE45nnOfy2eHJ5jwDM9nBQ" src="https://github.com/user-attachments/assets/6f8d2259-ae57-454b-9a67-6048d9833675" />
+
+- Now, Data Source has been added
+
+<img width="720" height="232" alt="1_RJdFgl2wh20B0eYMZ6adXg" src="https://github.com/user-attachments/assets/6db9185b-ad5f-4895-9f9c-f4ecc2388567" />
+
+- Now, we have to import the dashboard.
+- Click on New and select Import dashboard
+
+<img width="720" height="308" alt="1_yl9WO1dXnl75uJQWY4iSKA" src="https://github.com/user-attachments/assets/f58bf6ac-61fd-4d86-bcd9-6da0c2471092" />
+
+- Add the ID 14513 to view the Linux-based metrics on the Grafana dashboard
+
+<img width="720" height="364" alt="1_dTlV412Kct-0ZuGZguDgag" src="https://github.com/user-attachments/assets/624ad177-05f7-4aee-9ba2-dfb40d861e21" />
+
+- Select the correct Prometheus source and click on Import
+
+<img width="720" height="365" alt="1_pTVvmRtpWvNoxZXDli4acg" src="https://github.com/user-attachments/assets/3c6e65c1-af72-4b17-a6ce-3818d44f73a6" />
+
+- Now, we can use the Grafana Dashboard for the metrics
+
+<img width="720" height="394" alt="1_r0EMXroeOqxMvLO4m7l4Ug" src="https://github.com/user-attachments/assets/a6256fef-fded-4fa1-ae33-7149d124008a" />
+
+
+
