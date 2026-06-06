@@ -1477,5 +1477,156 @@ sudo systemctl status grafana-server.service
 
 <img width="720" height="394" alt="1_r0EMXroeOqxMvLO4m7l4Ug" src="https://github.com/user-attachments/assets/a6256fef-fded-4fa1-ae33-7149d124008a" />
 
+- Now, we will enable monitoring for Jenkins
+- Install the plugin first
 
+<img width="720" height="154" alt="1_d69rzxe4KkpNKD4bxQpY9w" src="https://github.com/user-attachments/assets/a4e0e20c-9255-407c-8db1-60b3b6c7fe3a" />
 
+- Now, we have to set node_exporter as a target for Prometheus.
+- For that, edit prometheus.yaml located at /etc/prometheus/prometheus.yaml
+```bash
+sudo vim /etc/prometheus/prometheus.yml
+```
+```yaml
+- job_name: "jenkins"
+    static_configs:
+      - targets: ["54.224.137.154:8080"]
+```
+
+<img width="720" height="219" alt="1_0_BpcCeYOD3oDwqdS2emTg" src="https://github.com/user-attachments/assets/7fa4ddf2-5212-4353-b306-6ea493cfd9e0" />
+
+```bash
+promtool check config /etc/prometheus/prometheus.yml
+```
+
+<img width="720" height="61" alt="1_taFhSHFOe7EHaj0ms-AKOA" src="https://github.com/user-attachments/assets/59fa326a-81c3-4585-81bb-9b666f4f5ba9" />
+
+- Now, we can validate the targets from Prometheus UI as well
+
+<img width="720" height="315" alt="1_77mXcncgbn5b2MYsKCs1GA" src="https://github.com/user-attachments/assets/c409525e-b220-41c9-b445-80942ef87877" />
+
+- Now, we will import the dashboard into Grafana
+
+<img width="720" height="356" alt="1_fW9-lxkFdf1-sHOZ5L0cxg" src="https://github.com/user-attachments/assets/b5dad5cd-e133-44f2-a6e9-b9a3991951fc" />
+
+- Now, we can see the dashboard
+
+<img width="720" height="393" alt="1_0hzPOQg40MiOs_sr6KGp7g" src="https://github.com/user-attachments/assets/0c56a0eb-19bf-44fa-b125-bf1efe085da6" />
+
+### Monitoring on Kubernetes Cluster
+- Now, we have to run this on both Nodes, including the Master and Worker
+- Create a node exporter user to run it
+```bash
+sudo useradd -rs /bin/false node_exporter
+```
+- Download the Node Exporter binary
+- Unzip the Node Exporter package
+- Move the binary file to the /usr/local/bin directory
+
+```bash
+wget https://github.com/prometheus/node_exporter/releases/download/v1.9.1/node_exporter-1.9.1.linux-amd64.tar.gz 
+tar -xvf node_exporter-1.9.1.linux-amd64.tar.gz 
+sudo mv node_exporter-1.9.1.linux-amd64/node_exporter /usr/local/bin/
+```
+
+<img width="720" height="348" alt="1_ZpDycO9rlzyYyQbWJW9r3w" src="https://github.com/user-attachments/assets/9870e910-0e90-4344-9031-4ec1c0c0f26b" />
+
+- Now, create a node exporter systemd service
+```bash
+sudo nano /etc/systemd/system/node_exporter.service
+```
+```yaml
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+<img width="720" height="194" alt="1_By8gPEhwasIRtDcH1idHxg" src="https://github.com/user-attachments/assets/183bd226-4605-414a-92b8-8f6a4b9a7d32" />
+
+- Now, we have to start the node exporter service using the commands below
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable node_exporter
+sudo systemctl start node_exporter
+sudo systemctl status node_exporter
+```
+
+<img width="720" height="243" alt="1_EldpXqefLJbgZ0KesRT4ow" src="https://github.com/user-attachments/assets/54ff96b5-5cd4-4e29-a796-05095cd7eb85" />
+
+- Add a target to the Prometheus server(Monitoring)
+```bash
+sudo vim /etc/prometheus/prometheus.yml
+```
+```yaml
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+ # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+    static_configs:
+      - targets: ["localhost:9090"]
+       # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+        labels:
+          app: "prometheus"
+  - job_name: 'Node_Exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['34.200.245.177:9100']
+  - job_name: "jenkins"
+    static_configs:
+      - targets: ["54.224.137.154:8080"]
+    metrics_path: "/prometheus"
+  - job_name: "node_exporter_k8smaster"
+    static_configs:
+      - targets: ["35.175.234.123:9100"]
+  - job_name: "node_exporter_k8sworker"
+    static_configs:
+      - targets: ["98.80.118.244:9100"]
+```
+
+<img width="720" height="290" alt="1_rsBxPpbdSXHoSueu91pMbg" src="https://github.com/user-attachments/assets/c0036f13-858e-40c2-982d-4382c6e2f5ae" />
+
+- After adding the configuration, we have to restart Prometheus
+```bash
+sudo systemctl restart prometheus.service
+sudo systemctl status prometheus.service
+```
+
+<img width="720" height="214" alt="1_Vg5Tk1WZ_rlB5F62EqQb9Q" src="https://github.com/user-attachments/assets/0e1aaf22-44bc-4e43-8613-b7f564245985" />
+
+- Now, we will validate from Prometheus Targets
+
+<img width="720" height="352" alt="1_ndw4ahzjQi4QbT-UzuSFYA" src="https://github.com/user-attachments/assets/68fa688b-ed25-4166-b9a3-229e2d1fe139" />
+
+- To see the metrics, click on the existing dashboard Linux Exporter Node
+
+<img width="720" height="149" alt="1_Cqd4uRZC3d8NwxBDzx0q6A" src="https://github.com/user-attachments/assets/bcf2cb06-2fa0-4eae-850b-eee75e78f9cc" />
+
+- Monitoring for Master Node
+
+<img width="720" height="337" alt="1_5IwH1-Mua0UFaTvVjwdKLw" src="https://github.com/user-attachments/assets/b4d76f85-523e-4500-936b-9f3de542b312" />
+
+- Monitoring for Worker Node
+
+<img width="720" height="339" alt="1_UQuteKuebn7QWAte2qRjkQ" src="https://github.com/user-attachments/assets/df9d0a28-bc8b-4842-8ce4-6ecebce93d18" />
+
+- Monitoring for Jenkins Server
+
+<img width="720" height="394" alt="1_sBR8dFqBKxSEn8zCz66hwQ" src="https://github.com/user-attachments/assets/ef29002d-797d-4622-81ac-c9457f0aa9b0" />
+
+- Monitoring Server
+
+<img width="720" height="394" alt="1_oRHDoWZt4wjhYxsRfyLuuA" src="https://github.com/user-attachments/assets/77b3bda0-f5a3-441b-b0a9-4577069e2d5f" />
