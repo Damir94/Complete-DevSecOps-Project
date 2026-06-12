@@ -292,7 +292,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
   - Organisation Name: It must be a unique name.
   - Email address: Provide your email address, and click on Next.
 
-<img width="720" height="393" alt="0_ewlIQBFvyF73FHku" src="https://github.com/user-attachments/assets/e74e5d5c-1205-4e83-8948-3c7417e8b34a" />
+<img width="1201" height="595" alt="Screenshot 2026-06-12 at 1 28 30 PM" src="https://github.com/user-attachments/assets/9b65125b-0aad-4084-bc6b-9cd8d88393b7" />
 
 - Once you create the Organization , It will take you to the workspaces section.
 - Now, we will create a workspace
