@@ -298,7 +298,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
 - Now, we will create a workspace
 - To create a workspace, click on create a workspace
 
-<img width="720" height="388" alt="0_sRHXhScB6xtW681A" src="https://github.com/user-attachments/assets/bc25104d-1c2d-4ab2-8af8-0db9a8f3c84d" />
+<img width="1585" height="606" alt="Screenshot 2026-06-12 at 1 31 49 PM" src="https://github.com/user-attachments/assets/0a429a6e-a65f-446e-ac29-a77a0d65da48" />
 
 - After creating the workspace, your workspace will look like the snippet given below
 
