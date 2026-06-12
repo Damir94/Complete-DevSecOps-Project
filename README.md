@@ -285,7 +285,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
 - Once you set up your account, it will look like the snippet below. Although I have already created one organisation.
 - Now, we will create our first organisation. So, click on Create organization the " Show " on the top right
 
-<img width="720" height="310" alt="0_9zRuqftZaI8gqU8y" src="https://github.com/user-attachments/assets/c9afd688-8f8f-4df6-a8ce-f93396009e43" />
+<img width="1897" height="406" alt="Screenshot 2026-06-12 at 1 25 56 PM" src="https://github.com/user-attachments/assets/c6c90f5f-e90d-4ecc-9f6a-2f4bae76f7b8" />
 
 - To create an organisation, you have to provide three information. Follow the below things:
   - Type of Organisation: If you are using it for a personal use case, go for Personal; else, Business is fine, but you have to pay
