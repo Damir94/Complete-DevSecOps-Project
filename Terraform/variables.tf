@@ -1,4 +1,4 @@
-variable "aws-region" {}
+variable "aws_region" {}
 variable "env" {}
 variable "cidr-block" {}
 variable "pub-subnet-count" {}
