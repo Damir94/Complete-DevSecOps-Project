@@ -1,4 +1,4 @@
-aws-region            = "us-east-1"
+aws_region            = "us-east-1"
 env                   = "dev"
 cidr-block            = "10.0.0.0/16"
 pub-subnet-count      = 4
