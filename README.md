@@ -426,6 +426,21 @@ jobs:
 - Go to the Actions of the GitHub Repository
 - Select the apply from the drop-down
 
+<img width="1913" height="783" alt="Screenshot 2026-07-21 at 11 33 25 AM" src="https://github.com/user-attachments/assets/8326e736-f2c8-4c65-a42d-5d17a89ddf7c" />
+
+- Apply is successful
+
+<img width="1539" height="919" alt="Screenshot 2026-07-21 at 11 35 15 AM" src="https://github.com/user-attachments/assets/c0745118-9834-4b78-b075-aaf539012df6" />
+
+- You can validate the resource from Terraform Cloud as well
+
+<img width="1873" height="873" alt="Screenshot 2026-07-21 at 11 36 17 AM" src="https://github.com/user-attachments/assets/de55c34a-33cf-4187-9435-239ffc422c37" />
+
+- Now, let’s go to the AWS Console and see whether our EC2s are there or not
+
+<img width="1461" height="320" alt="Screenshot 2026-07-21 at 11 37 52 AM" src="https://github.com/user-attachments/assets/ca2b3fc7-13a7-4afb-a710-41dba944e0f3" />
+
+- You’ve just automated your AWS infrastructure with Terraform Cloud and GitHub Actions — the clean, modern way.
 
 ##  Setting Up Jenkins, Docker, SonarQube, and Trivy for CI/CD
 
@@ -446,7 +461,7 @@ jobs:
 - As all four machines are running. We are going to start with the Jenkins Server to configure.
 - Select the Jenkins Server and connect with Session Manager
 
-<img width="720" height="206" alt="1_T-QRcU9Bj7Kt_i8gloQDow" src="https://github.com/user-attachments/assets/2cf73edd-fd6d-41bf-a2b6-ee8081ebb2e4" />
+<img width="1622" height="238" alt="Screenshot 2026-07-21 at 11 39 54 AM" src="https://github.com/user-attachments/assets/b170dfcb-b355-42a8-9bf4-995dc2194a01" />
 
 - Log in as the ubuntu user
 ```bash
@@ -454,16 +469,17 @@ sudo su ubuntu
 cd
 ```
 
-<img width="720" height="129" alt="1_1DAL0Yv7ZRIYpaaj6Rxz8Q" src="https://github.com/user-attachments/assets/4eafa21f-c157-4bce-9860-cd45ad005d2d" />
+<img width="836" height="173" alt="Screenshot 2026-07-21 at 11 40 45 AM" src="https://github.com/user-attachments/assets/5cf3acfa-e21a-474e-8b58-e75723ce1a41" />
 
-- To install Jenkins , we need to install Java first.
+### Jenkins Installation Guide (Ubuntu)
+
+Step 1: Update your system
+
 ```bash
-sudo apt update
-sudo apt install fontconfig openjdk-21-jre -y
-java --version
+sudo apt update && sudo apt upgrade -y
 ```
 
-<img width="720" height="295" alt="1_OzDJwN1tzAjtVhNtZgB6Ag" src="https://github.com/user-attachments/assets/02e4cd3e-880f-4fe9-8dd6-aaa4a2b118a1" />
+<img width="921" height="311" alt="Screenshot 2026-07-21 at 11 42 58 AM" src="https://github.com/user-attachments/assets/62d6cf6e-621d-4e3f-9003-826e67c55cd3" />
 
 - Now, we will be going to install jenkins
 ```bash
@@ -475,6 +491,47 @@ echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
 sudo apt update
 sudo apt install jenkins -y
 ```
+Step 2: Install Java (Jenkins needs Java) Jenkins works best with OpenJDK 21 now.
+
+```bash
+sudo apt install fontconfig openjdk-21-jre
+```
+```bash
+java -version
+```
+
+<img width="904" height="91" alt="Screenshot 2026-07-21 at 12 02 38 PM" src="https://github.com/user-attachments/assets/82251ce8-6199-47e9-b28c-8948eace39f2" />
+
+Step 3: Add Jenkins official repository & key
+
+```bash
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+```
+
+Step 4: Install Jenkins
+
+```bash
+sudo apt update
+sudo apt install jenkins
+```
+
+Step 5: Start & enable Jenkins
+
+```bash
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+```
+
+- Check status:
+```bash
+sudo systemctl status jenkins
+```
+
+<img width="1564" height="295" alt="Screenshot 2026-07-21 at 12 04 43 PM" src="https://github.com/user-attachments/assets/045b08fe-9760-477c-b688-5e7dc04be309" />
 
 <img width="720" height="367" alt="1_pcznsEufD2V_DVmyemufGg" src="https://github.com/user-attachments/assets/1288db09-d9d1-45d9-aa20-32f26e71440a" />
 
