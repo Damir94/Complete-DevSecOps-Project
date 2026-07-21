@@ -309,7 +309,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
    - AWS_ACCESS_KEY_ID
    - AWS_SECRET_ACCESS_KEY
 
-<img width="720" height="269" alt="1_4OPl_5Sf6bCPFrusQRqP4A" src="https://github.com/user-attachments/assets/f2c61b06-6862-4849-8a9e-6b1f9aff5ee5" />
+<img width="1270" height="299" alt="Screenshot 2026-07-21 at 11 20 56 AM" src="https://github.com/user-attachments/assets/1469b6e7-9f67-4756-a85a-62ebe358fb65" />
 
 - Now, we will have to create the token to authenticate with Terraform Cloud from GitHub Actions while running Terraform operations
 - Go to your Profile’s Account settings in the top right
