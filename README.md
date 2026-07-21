@@ -533,8 +533,6 @@ sudo systemctl status jenkins
 
 <img width="1564" height="295" alt="Screenshot 2026-07-21 at 12 04 43 PM" src="https://github.com/user-attachments/assets/045b08fe-9760-477c-b688-5e7dc04be309" />
 
-<img width="720" height="367" alt="1_pcznsEufD2V_DVmyemufGg" src="https://github.com/user-attachments/assets/1288db09-d9d1-45d9-aa20-32f26e71440a" />
-
 - Let’s validate whether Jenkins is installed or not by accessing it.
 - Get the Public IP of your Jenkins Server and add the 8080 Port
 
@@ -554,15 +552,15 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 - Now, we will create one user instead of using Admin
 - Provide the required information
 
-<img width="720" height="418" alt="1_en8FQAVsuBHCIvepAqYZKQ" src="https://github.com/user-attachments/assets/08189826-c09d-495b-836d-e8ed2f6ef842" />
+<img width="795" height="510" alt="Screenshot 2026-07-21 at 12 10 08 PM" src="https://github.com/user-attachments/assets/4b743bf0-43d1-42c9-a0c6-0bef265d97f6" />
 
 - Click on Save and Finish
 
-<img width="720" height="417" alt="1_ezyEv2uFWgA085zs2kIfQw" src="https://github.com/user-attachments/assets/03aed7a1-ee45-4da2-8eed-18bdc32af92f" />
+<img width="964" height="354" alt="Screenshot 2026-07-21 at 12 10 53 PM" src="https://github.com/user-attachments/assets/fd8c5e5f-ae90-4ee5-b392-99407ea74494" />
 
 - We are ready with our Jenkins Server
 
-<img width="720" height="391" alt="1_CspSPHwSgYbvgTbcwMCHUg" src="https://github.com/user-attachments/assets/19296b79-02cb-4685-8764-faec48825078" />
+<img width="1456" height="630" alt="Screenshot 2026-07-21 at 12 11 39 PM" src="https://github.com/user-attachments/assets/5434afd5-76d3-4c81-ab83-f4c2e72451d2" />
 
 - Now, we have to install multiple tools on Jenkins, in which Docker is first.
 - Run the command below to install docker
@@ -575,7 +573,7 @@ sudo systemctl restart docker
 sudo chmod 777 /var/run/docker.sock
 ```
 
-<img width="720" height="287" alt="1_O1mLDBcVSd1ST2aSNYd6oA" src="https://github.com/user-attachments/assets/b34d2d3e-417b-4466-9138-905a0c5be5c5" />
+<img width="1068" height="275" alt="Screenshot 2026-07-21 at 12 14 31 PM" src="https://github.com/user-attachments/assets/9a001ec4-6587-4091-9610-a1058da7aa4a" />
 
 - After installing Docker, we will be going to install Sonarqube for Code Quality.
 - We have two options to install Sonarqube which are installing Sonarqube on EC2 directly or installing Sonarqubeusing Docker container
@@ -583,12 +581,13 @@ sudo chmod 777 /var/run/docker.sock
 ```bash
 docker run -d --name sonarqube -p 9000:9000 sonarqube:community
 ```
-<img width="720" height="181" alt="1_YTFPIHZt_WLAhTjrB1LbUg" src="https://github.com/user-attachments/assets/fdda6209-c48a-4a42-8316-f40fb7b0ade5" />
+
+<img width="1660" height="475" alt="Screenshot 2026-07-21 at 12 16 04 PM" src="https://github.com/user-attachments/assets/1c1b44d5-1d9a-4282-af1e-e7af3b2e0c50" />
 
 - The Sonarqube docker container is running, and now we will access it using the Same Jenkins IP with Port 9000
 - To access SonarQube, the username and password are admin
 
-<img width="720" height="355" alt="1_1C8cHaQ4Hkif7FLCU4a_yg" src="https://github.com/user-attachments/assets/77b42bc9-25b1-45fa-8820-d8a6354cbe38" />
+<img width="1726" height="899" alt="Screenshot 2026-07-21 at 12 17 44 PM" src="https://github.com/user-attachments/assets/efa0ce90-af61-4003-b5d4-cfff07cb97fb" />
 
 - Update the password of your SonarQube
 
@@ -596,7 +595,7 @@ docker run -d --name sonarqube -p 9000:9000 sonarqube:community
 
 - Here is the SonarQube dashboard
 
-<img width="720" height="350" alt="1_3nZ71-U96z6t03JAlPnc9A" src="https://github.com/user-attachments/assets/e19c79bb-092a-4b44-87b6-cc2854900e8e" />
+<img width="1739" height="703" alt="Screenshot 2026-07-21 at 12 20 04 PM" src="https://github.com/user-attachments/assets/6bac1c17-82e2-42e1-acf0-493a653828f1" />
 
 - Now, we have to install our next tool, which is trivy
 ```bash
@@ -608,7 +607,7 @@ sudo apt-get install trivy
 trivy --version
 ```
 
-<img width="720" height="273" alt="1_8JLP2lBPbuWrHGKZg8rabA" src="https://github.com/user-attachments/assets/637369a7-8f2b-43e9-8f97-b6604f37fce2" />
+<img width="846" height="288" alt="Screenshot 2026-07-21 at 12 21 42 PM" src="https://github.com/user-attachments/assets/5c6f4873-09b6-4984-b1a5-7d6096559916" />
 
 - Now, we will install kubectl utility
 ```bash
@@ -618,7 +617,8 @@ echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client
 ```
-<img width="720" height="157" alt="1_VTTPjX7dRfTvoQHbFeGZnw" src="https://github.com/user-attachments/assets/eaa2b28c-b7eb-42b9-8fbf-ace0d4987c73" />
+
+<img width="1034" height="354" alt="Screenshot 2026-07-21 at 12 22 46 PM" src="https://github.com/user-attachments/assets/1aee0386-4e2b-494f-91ab-b4a0d4fa367e" />
 
 - Now, we will be setting up Slack for notification of our Pipelines whenever they finish with any status like Failed, Succeeded, or Aborted.
 - For that, we have to install the Jenkins plugin called Slack Notification
@@ -633,15 +633,15 @@ kubectl version --client
 - Go to the Link: https://api.slack.com/apps and make sure you have already signed in with your official Slack account
 - Click on Create New App
 
-<img width="720" height="223" alt="1_M5ssCvCs-4hmiYnVTBbrDA" src="https://github.com/user-attachments/assets/f11aa5ff-89e2-41c7-abb6-ec5f2130956a" />
+<img width="1025" height="407" alt="Screenshot 2026-07-21 at 12 31 41 PM" src="https://github.com/user-attachments/assets/e28bb571-88cd-4d88-9381-d3f105d5c28b" />
 
 - We will be creating an app using a manifest. So, click on it
 
-<img width="720" height="259" alt="1_sTD08oEMCzqjjGGHMy-EUg" src="https://github.com/user-attachments/assets/c82d3ba7-876d-447d-9899-cd970ad2abd3" />
+<img width="1017" height="554" alt="Screenshot 2026-07-21 at 12 32 56 PM" src="https://github.com/user-attachments/assets/ed99dd0c-0025-4a2e-ba0f-1d553ba58cf1" />
 
 - Select the correct workspace for Slack
 
-<img width="720" height="262" alt="1_NJLWZFi_f2bgG2go_kVj8Q" src="https://github.com/user-attachments/assets/48b8f285-aa6a-4481-af5b-edbcf3f72326" />
+<img width="1010" height="572" alt="Screenshot 2026-07-21 at 12 33 34 PM" src="https://github.com/user-attachments/assets/e64f9204-5e01-43d4-8b6c-f75158b55a0c" />
 
 - We will be writing the manifest in YAML format. So, click on YAML and remove the existing/default manifest and replace it with the below manifest, and click on Next
 ```yaml
@@ -668,52 +668,53 @@ settings:
   token_rotation_enabled: false
 ```
 
-<img width="720" height="385" alt="1_-M13rOqP210HfrQQJUhlrQ" src="https://github.com/user-attachments/assets/1f0cbab5-6ee3-4b9c-9846-8e88c427dff5" />
+<img width="951" height="734" alt="Screenshot 2026-07-21 at 12 34 35 PM" src="https://github.com/user-attachments/assets/04f7d2e4-e08e-4ec8-a0f1-d79ef1ee91ea" />
 
 - Review the provided information and click on Create
 
-<img width="720" height="280" alt="1_8W6lm9-lbBtnIfw98TXXrg" src="https://github.com/user-attachments/assets/bceee056-365e-4df0-8f88-71522820f1fa" />
+<img width="1024" height="558" alt="Screenshot 2026-07-21 at 12 35 20 PM" src="https://github.com/user-attachments/assets/9e9ff12e-c1cd-45d5-b60d-3ec8f1396407" />
 
 - After creating the app, your app will look like this
 
-<img width="720" height="355" alt="1_MZzWv3joa0xFYISPfMSR8A" src="https://github.com/user-attachments/assets/73d9dc31-24c1-4d84-9f7b-b3aac34ac696" />
+<img width="1031" height="616" alt="Screenshot 2026-07-21 at 12 36 12 PM" src="https://github.com/user-attachments/assets/8fcd3aff-8ec3-4bee-b4ee-2c1c4079aff4" />
 
 - You can configure the Display information
 
-<img width="720" height="394" alt="1_6gGJ--6s8w7ImFIQXrW_JQ" src="https://github.com/user-attachments/assets/c67bec0f-612e-4745-be89-c6c52bfd940f" />
+<img width="592" height="588" alt="Screenshot 2026-07-21 at 12 39 39 PM" src="https://github.com/user-attachments/assets/b8ce1045-9978-428e-adec-ba956d8884bb" />
 
 - Now, install the App on our Slack workspace
 - Click on Install
 
-<img width="720" height="205" alt="1_mgvLSob00JNwvHlZc6DyGw" src="https://github.com/user-attachments/assets/6996a015-4fce-4ccd-986b-941d29c1b624" />
+<img width="918" height="340" alt="Screenshot 2026-07-21 at 12 41 23 PM" src="https://github.com/user-attachments/assets/bca97789-ebd6-41f0-9a98-b61535832a4c" />
 
 - It will prompt you to reconfirm a few things. After confirming, click on Allow
 
-<img width="720" height="354" alt="1_EHp9PqDcZime8oIQrvHYgw" src="https://github.com/user-attachments/assets/c4712998-783c-4a59-a185-f7df9fcbe907" />
+<img width="1014" height="591" alt="Screenshot 2026-07-21 at 12 42 13 PM" src="https://github.com/user-attachments/assets/13be2cf7-736b-429e-8023-33342f222483" />
 
 - You will get the Bot User Token
 
-<img width="720" height="242" alt="1_W3P6Otgq-_PGX-Wb_Cc1Ag" src="https://github.com/user-attachments/assets/e42c8efa-8096-4f6c-afb9-679ee9eaf065" />
+<img width="907" height="380" alt="Screenshot 2026-07-21 at 12 43 06 PM" src="https://github.com/user-attachments/assets/ae2850b9-4e80-46cb-8174-dfdf63b4bc62" />
 
 - Also, if you check your Slack. You will see one app added called Jenkins
 
-<img width="720" height="142" alt="1_4Azh78DWsSMXF1VBsa4VJg" src="https://github.com/user-attachments/assets/dfb62b66-8656-46eb-ac06-2a9abcacc12f" />
+<img width="947" height="222" alt="Screenshot 2026-07-21 at 12 44 16 PM" src="https://github.com/user-attachments/assets/f3fab73a-adc9-468f-a51d-31c28120c6bc" />
 
 - Now, we have to copy the Bot User Token and use it in Jenkins
 - Go to the Jenkins -> Manage Jenkins -> System and look for Slack
 
-<img width="720" height="298" alt="1_z9DrRBG22B5CSZreHkaqKA" src="https://github.com/user-attachments/assets/d4077544-8909-4e68-9853-c79e438e2c3e" />
+<img width="1641" height="483" alt="Screenshot 2026-07-21 at 12 45 59 PM" src="https://github.com/user-attachments/assets/9694a6b0-ab35-4ebb-988f-037570e80648" />
 
 - We have to add a secret by clicking on +Add, which we copied in the earlier steps
 - Click on Add
 
-<img width="720" height="372" alt="1_czl_pg-tRRXb2EIJ31W8jg" src="https://github.com/user-attachments/assets/849d49ed-5570-499d-85eb-3b9924a90bbe" />
+<img width="688" height="558" alt="Screenshot 2026-07-21 at 12 48 08 PM" src="https://github.com/user-attachments/assets/f1fa7838-ef62-49ab-b560-eab8ae329a3f" />
 
 - After adding the secret, we have to invite the Jenkins app that we created in our Slack channel, as my channel is private. But if your channel is public, you don’t need to invite
 ```bash
 /invite @Jenkins
 ```
-<img width="720" height="261" alt="1_0iJFVZvh7b5UhO7jle3hRg" src="https://github.com/user-attachments/assets/808c2b87-8c64-42ad-9756-53b55bb95021" />
+
+<img width="957" height="407" alt="Screenshot 2026-07-21 at 12 51 35 PM" src="https://github.com/user-attachments/assets/67bf06f4-281c-4184-af24-9096e79f2788" />
 
 - Now, add the workspace name and channel name of your Slack where you want to get the notification of your Jenkins Pipeline and test the connection. As you can see, our Test Connection is successful.
 
@@ -721,11 +722,11 @@ settings:
 
 - You can also validate from here your Slack channel as it sends you a ping
 
-<img width="720" height="257" alt="1_wRZTMv5DWFgCczxzO_CB3g" src="https://github.com/user-attachments/assets/9ca17db3-07bc-4e8c-88aa-8b248a2df206" />
+<img width="701" height="139" alt="Screenshot 2026-07-21 at 12 56 27 PM" src="https://github.com/user-attachments/assets/b8c415fe-6b3e-4ec5-842a-4022463ae22b" />
 
 - Once Slack is working fine, then click on Save and Apply
 
-<img width="720" height="378" alt="1_yomYx1uoTk5gvTL0Fbtslw" src="https://github.com/user-attachments/assets/2ad77f10-e475-4599-a6d6-3bd4e076cf06" />
+<img width="1539" height="628" alt="Screenshot 2026-07-21 at 12 57 37 PM" src="https://github.com/user-attachments/assets/f0046264-ca0a-4e49-8521-867780141153" />
 
 ### Conclusion
 - With this setup, your DevOps engine is now fully functional and security-aware.
