@@ -302,7 +302,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
 
 - After creating the workspace, your workspace will look like the snippet given below
 
-<img width="720" height="346" alt="1_9GbFS7BFWDlswAyR5bFnXw" src="https://github.com/user-attachments/assets/8b71e06a-78dd-4664-81ea-c5ae2cc71905" />
+<img width="1137" height="230" alt="Screenshot 2026-07-21 at 11 19 19 AM" src="https://github.com/user-attachments/assets/fcdc778a-8126-4c3e-84b9-d1ddda6add6b" />
 
 - Now, we have to provide our AWS credentials to Terraform Workspace as our plan, and other Terraform operations will be running on HashiCorp-hosted servers.
 - Make sure to create the Environment Variables with the correct Keys and values under the Variables section.
