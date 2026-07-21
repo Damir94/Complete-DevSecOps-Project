@@ -325,7 +325,7 @@ you can also simply sign up for a Terraform account. Now, Click on Sign up
 - Now, we will automate our AWS Infrastructure using GitHub Actions
 - Below is the workflow script location to add to your Project directory showing below
 
-<img width="720" height="94" alt="1_eMar-GEAA8SuxpexYa_fKg" src="https://github.com/user-attachments/assets/91f88567-ca6b-4113-a3a6-26ff855407c3" />
+<img width="882" height="189" alt="Screenshot 2026-07-21 at 11 23 24 AM" src="https://github.com/user-attachments/assets/5bc20c52-b80e-4ca4-9696-8cade1d24d1e" />
 
 ### The workflow script written below.
 
