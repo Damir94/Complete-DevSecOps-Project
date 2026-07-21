@@ -409,6 +409,23 @@ jobs:
 - Now, we need to create three secrets for Terraform Cloud in the GitHub Repo
 - Navigate to your Project Repo -> Settings
 
+<img width="1567" height="125" alt="Screenshot 2026-07-21 at 11 25 59 AM" src="https://github.com/user-attachments/assets/87de9767-d83b-4619-98d4-3f1b0f252fa7" />
+
+- Expand the Secrets and variables, then click on Actions
+
+<img width="420" height="291" alt="Screenshot 2026-07-21 at 11 28 06 AM" src="https://github.com/user-attachments/assets/6b05b8aa-e62f-4d5e-a40a-bcd5773682ee" />
+
+- Then, add the three variables with correct values
+  - TF_API_TOKEN
+  - TF_CLOUD_ORGANIZATION
+  - TF_WORKSPACE
+
+<img width="1544" height="753" alt="Screenshot 2026-07-21 at 11 29 09 AM" src="https://github.com/user-attachments/assets/e2a8fef9-96ad-4c79-b7d1-e4a3f05bf064" />
+
+### Now, we are ready to deploy our Infrastructure using Terraform, Terraform Cloud, and GitHub Actions on AWS
+- Go to the Actions of the GitHub Repository
+- Select the apply from the drop-down
+
 
 ##  Setting Up Jenkins, Docker, SonarQube, and Trivy for CI/CD
 
