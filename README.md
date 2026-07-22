@@ -741,7 +741,7 @@ settings:
 - Go to the Tools section under Manage Plugins
 - Configure NodeJS by providing the desired name and using the compatible version, and click on Save and Apply
 
-<img width="720" height="391" alt="1_7Ba21WezSBCWkk3JoCdQag" src="https://github.com/user-attachments/assets/56e8f6d6-e8ff-4592-bf6f-91d7bd870a12" />
+<img width="1114" height="798" alt="Screenshot 2026-07-22 at 6 47 08 AM" src="https://github.com/user-attachments/assets/579635d3-5a7b-442d-bc77-5afcbb79b890" />
 
 - It’s time to configure SonarQube. So go to the Sonar dashboard. Click on User
 
@@ -753,7 +753,7 @@ settings:
 
 - Provide the name of your token and copy the token
 
-<img width="720" height="345" alt="1_JfY5fsx0_h-P79hdOQ5T8Q" src="https://github.com/user-attachments/assets/52581780-3f17-44d9-bef5-90b4dba067db" />
+<img width="999" height="544" alt="Screenshot 2026-07-22 at 6 52 19 AM" src="https://github.com/user-attachments/assets/72c11c40-519e-417e-9bfb-56799e42011c" />
 
 - Now, we have to add the copied token to Jenkins Secrets
 - Click on Add credentials
@@ -762,7 +762,7 @@ settings:
 
 - Provide the correct secrets and other information, and click on Create
 
-<img width="720" height="329" alt="1_ZVZSHc9S1tXpkxmkzYIiYA" src="https://github.com/user-attachments/assets/cc96cddb-9ba4-4def-a8a9-ce8a32571bb7" />
+<img width="537" height="500" alt="Screenshot 2026-07-22 at 6 54 28 AM" src="https://github.com/user-attachments/assets/e1172ad4-17f8-400f-9a25-8e847f7c05df" />
 
 - Go to Manage Jenkins -> System
 - Click on Add SonarQube
@@ -771,7 +771,7 @@ settings:
 
 - Please provide the name sonar-server with the Server URL and select the credentials that we have added.
 
-<img width="720" height="310" alt="1_K6lu9MKNo7acJ2Tv35CTgQ" src="https://github.com/user-attachments/assets/750346e6-b39f-4e55-8bb5-ed5bbfa45556" />
+<img width="1043" height="576" alt="Screenshot 2026-07-22 at 6 56 28 AM" src="https://github.com/user-attachments/assets/0991a11f-41f8-42a7-b88c-d35801b8b110" />
 
 - Now, we have to configure Sonar under the Tools section of Manage Plugins
 - Go to Manage Jenkins -> Tools
@@ -780,7 +780,7 @@ settings:
 
 - Provide the name sonar-server and select the latest version of SonarQube.
 
-<img width="720" height="281" alt="1_qdI3c0GO-W6GcXu7p0MhoQ" src="https://github.com/user-attachments/assets/bb0c4cc4-8eea-40e3-b471-5422988adccb" />
+<img width="1006" height="431" alt="Screenshot 2026-07-22 at 6 58 45 AM" src="https://github.com/user-attachments/assets/86de8851-f7d6-4103-ae7d-e93b3a577362" />
 
 - Now, we need to create a webhook for Quality Gates. Click on Configuration and select Webhooks.
 
@@ -792,11 +792,11 @@ settings:
 
 - Provide the correct information for your Jenkins Server and click on Create
 
-<img width="720" height="343" alt="1_Q7KllgiPbS8fwG7y4-9PFQ" src="https://github.com/user-attachments/assets/bcc5bcaa-7879-4028-8956-6999f8442a79" />
+<img width="508" height="521" alt="Screenshot 2026-07-22 at 7 01 20 AM" src="https://github.com/user-attachments/assets/954c249a-0fbe-4033-98d9-8564415e8ac9" />
 
 - The Webhook will be showing the below snippet
 
-<img width="720" height="210" alt="1_Lh7FrIrH7cu8seU7esOFZA" src="https://github.com/user-attachments/assets/86d65b15-7f3e-4e0c-94d0-7d5029cf8efc" />
+<img width="1346" height="361" alt="Screenshot 2026-07-22 at 7 01 59 AM" src="https://github.com/user-attachments/assets/ebb90d89-ffda-44a0-9a17-fe5291245abc" />
 
 - Now, we will be creating the Project on SonarQube
 - Click on Create a local project
@@ -805,7 +805,7 @@ settings:
 
 - Provide the correct information and click on Create
 
-<img width="720" height="261" alt="1_YV3B3YcNIoCronyJL31umQ" src="https://github.com/user-attachments/assets/910fc8a6-c214-43d0-abe8-91a11c82e8d9" />
+<img width="644" height="529" alt="Screenshot 2026-07-22 at 7 03 21 AM" src="https://github.com/user-attachments/assets/1f1585b7-c955-42c4-a066-05138af00dea" />
 
 - Now, click on locally
 
@@ -813,16 +813,16 @@ settings:
 
 - Provide the existing token for the project and click on Continue
 
-<img width="720" height="340" alt="1_a8A-Jm-WNHkckqhQzX5nDw" src="https://github.com/user-attachments/assets/73df2a33-e74e-41ff-874b-9fdd6c5d14b3" />
+<img width="869" height="300" alt="Screenshot 2026-07-22 at 7 09 18 AM" src="https://github.com/user-attachments/assets/47b74ca2-86bf-4168-9f15-affc93df3506" />
 
 - Select JS/TS & Web option as our application is NodeJS-based, and copy the provided commands, as we will be using them in our Jenkins Pipelines
 
-<img width="720" height="275" alt="1_Vn5sNyC58UWBQ70fZ1Vccw" src="https://github.com/user-attachments/assets/a8e75fdd-1749-40bb-b4a4-6b091b69a473" />
+<img width="1130" height="486" alt="Screenshot 2026-07-22 at 7 08 58 AM" src="https://github.com/user-attachments/assets/e5139c01-f384-4591-a3c3-07b134c8439d" />
 
 - Now, it’s time to create our Jenkins Pipeline
 - Provide the name of your pipeline and select Pipeline as the Item type
 
-<img width="720" height="394" alt="1_GA7J3DrLhDZ5DLUspdJGHQ" src="https://github.com/user-attachments/assets/208e94d6-b737-49bd-9df7-a9d63890b253" />
+<img width="893" height="256" alt="Screenshot 2026-07-22 at 7 11 03 AM" src="https://github.com/user-attachments/assets/74e2d22b-697b-4963-b875-7d1b6ef302c7" />
 
 - We will be providing our Jenkins Pipeline Script from the GitHub Repo. Therefore, provide the information as written below
 
