@@ -475,9 +475,6 @@ Step 1: Update your system
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
-
-<img width="921" height="311" alt="Screenshot 2026-07-21 at 11 42 58 AM" src="https://github.com/user-attachments/assets/62d6cf6e-621d-4e3f-9003-826e67c55cd3" />
-
 Step 2: Install Java (Jenkins needs Java) Jenkins works best with OpenJDK 21 now.
 
 ```bash
