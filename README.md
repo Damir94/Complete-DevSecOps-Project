@@ -468,9 +468,6 @@ jobs:
 sudo su ubuntu
 cd
 ```
-
-<img width="836" height="173" alt="Screenshot 2026-07-21 at 11 40 45 AM" src="https://github.com/user-attachments/assets/5cf3acfa-e21a-474e-8b58-e75723ce1a41" />
-
 ### Jenkins Installation Guide (Ubuntu)
 
 Step 1: Update your system
