@@ -702,13 +702,13 @@ settings:
 
 - Now, add the workspace name and channel name of your Slack where you want to get the notification of your Jenkins Pipeline and test the connection. As you can see, our Test Connection is successful.
 
-<img width="701" height="139" alt="Screenshot 2026-07-21 at 12 56 27 PM" src="https://github.com/user-attachments/assets/b8c415fe-6b3e-4ec5-842a-4022463ae22b" />
+<img width="1539" height="628" alt="Screenshot 2026-07-21 at 12 57 37 PM" src="https://github.com/user-attachments/assets/f0046264-ca0a-4e49-8521-867780141153" />
 
 - You can also validate from here your Slack channel as it sends you a ping
 
-- Once Slack is working fine, then click on Save and Apply
+<img width="701" height="139" alt="Screenshot 2026-07-21 at 12 56 27 PM" src="https://github.com/user-attachments/assets/b8c415fe-6b3e-4ec5-842a-4022463ae22b" />
 
-<img width="1539" height="628" alt="Screenshot 2026-07-21 at 12 57 37 PM" src="https://github.com/user-attachments/assets/f0046264-ca0a-4e49-8521-867780141153" />
+- Once Slack is working fine, then click on Save and Apply
 
 ### Conclusion
 - With this setup, your DevOps engine is now fully functional and security-aware.
