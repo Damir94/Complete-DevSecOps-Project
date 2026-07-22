@@ -702,7 +702,6 @@ settings:
 
 - Now, add the workspace name and channel name of your Slack where you want to get the notification of your Jenkins Pipeline and test the connection. As you can see, our Test Connection is successful.
 
-<img width="720" height="290" alt="1_Ac4SK7K1bfsAK35J-vn2nw" src="https://github.com/user-attachments/assets/45577b0d-3055-4a9e-9659-d4da439bd8d5" />
 
 - You can also validate from here your Slack channel as it sends you a ping
 
