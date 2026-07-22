@@ -481,16 +481,6 @@ sudo apt update && sudo apt upgrade -y
 
 <img width="921" height="311" alt="Screenshot 2026-07-21 at 11 42 58 AM" src="https://github.com/user-attachments/assets/62d6cf6e-621d-4e3f-9003-826e67c55cd3" />
 
-- Now, we will be going to install jenkins
-```bash
-sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
-  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt update
-sudo apt install jenkins -y
-```
 Step 2: Install Java (Jenkins needs Java) Jenkins works best with OpenJDK 21 now.
 
 ```bash
