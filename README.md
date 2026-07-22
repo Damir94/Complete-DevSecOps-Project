@@ -826,7 +826,9 @@ settings:
 
 - We will be providing our Jenkins Pipeline Script from the GitHub Repo. Therefore, provide the information as written below
 
-<img width="720" height="381" alt="1_Q1Mq8aD5H0Lv3TtT9xhIAQ" src="https://github.com/user-attachments/assets/358e3488-8d1e-412e-bba4-c5ca09808cf6" />
+<img width="1043" height="519" alt="Screenshot 2026-07-22 at 7 32 46 AM" src="https://github.com/user-attachments/assets/2678de72-9dce-4d75-9281-5cecd1db1790" />
+
+<img width="1063" height="540" alt="Screenshot 2026-07-22 at 7 32 54 AM" src="https://github.com/user-attachments/assets/71ca94fb-3734-40b5-a433-f4df5f0cabfd" />
 
 - If you see our Jenkins Pipeline has failed at OWASP DP Check, which means things are going as expected.
 - Why does it fail at the OWASP DP Check? Because we did not install & configure OWASP DP on Jenkins.
