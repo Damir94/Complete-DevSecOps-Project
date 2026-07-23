@@ -873,19 +873,19 @@ If both commands return the installed versions and `npm install` completes succe
 - If you see our Jenkins Pipeline has failed at OWASP DP Check, which means things are going as expected.
 - Why does it fail at the OWASP DP Check? Because we did not install & configure OWASP DP on Jenkins.
 
-<img width="720" height="207" alt="1_SH225wRIAv1wSXxOhNalxA" src="https://github.com/user-attachments/assets/45cb7552-42fb-449a-a895-4ace678daf35" />
+<img width="1571" height="371" alt="Screenshot 2026-07-23 at 11 10 41 AM" src="https://github.com/user-attachments/assets/f2796bdd-a823-4dfe-a85b-16215ed7630a" />
 
 - Here is the Sonar Scan for our Application Code
 
-<img width="720" height="307" alt="1_8lthAzbRYP0wJx-nizOk8A" src="https://github.com/user-attachments/assets/3e77df58-315b-4a47-ab8f-bae1ecc89a06" />
+<img width="1681" height="793" alt="Screenshot 2026-07-23 at 11 08 38 AM" src="https://github.com/user-attachments/assets/7673560d-ab0f-413b-9a64-34d177ba7929" />
 
 - Also, I got the notification on our Slack channel
 
-<img width="720" height="122" alt="1_vyTckK9loL8lZEJ3KgNO6A" src="https://github.com/user-attachments/assets/804b9e5e-d085-438e-9062-8fb671281849" />
+<img width="1067" height="617" alt="Screenshot 2026-07-23 at 11 12 35 AM" src="https://github.com/user-attachments/assets/100ff797-7bbb-436c-838d-c9833cb03204" />
 
 - Go to Manage Jenkins -> Plugins and look for OWASP, and download the plugin
 
-<img width="720" height="154" alt="1_wqnVDZVZ17ZCjAAlbzoEQA" src="https://github.com/user-attachments/assets/c55fbfc1-43e5-43bd-949b-0b6a79758dc5" />
+<img width="1390" height="246" alt="Screenshot 2026-07-23 at 11 13 14 AM" src="https://github.com/user-attachments/assets/542ef9db-4993-4459-b526-2d89282f0755" />
 
 - Once you install the plugin, configure the OWASP DP Check tool
 - Go to Manage Plugins -> Tools and look for Dependency-Check
