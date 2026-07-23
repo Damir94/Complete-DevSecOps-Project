@@ -1,264 +1,143 @@
-pipeline {
+pipeline{
     agent any
-
-    tools {
+    tools{
         nodejs 'nodejs'
     }
-
     environment {
-        SCANNER_HOME = tool 'sonar-server'
+        SCANNER_HOME=tool 'sonar-server'
     }
-
     stages {
-
-        stage('Workspace Cleaning') {
-            steps {
+        stage('Workspace Cleaning'){
+            steps{
                 cleanWs()
             }
         }
-
-        stage('Checkout from Git') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/Damir94/Complete-DevSecOps-Project.git'
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'main', url: 'https://github.com/Damir94/Complete-DevSecOps-Project.git'
             }
         }
-
-
         stage('Install Dependencies') {
             steps {
                 dir('Application-Code') {
-                    sh '''
-                        echo "Installing dependencies..."
-                        yarn install --frozen-lockfile
-                    '''
+                    // Install project dependencies (needed for OWASP + build)
+                    sh 'npm install'
                 }
             }
         }
-
-
-        stage('SonarQube Analysis') {
+        stage("SonarQube Analysis") {
             steps {
                 dir('Application-Code') {
-
                     withSonarQubeEnv('sonar-server') {
-
-                        withCredentials([
-                            string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')
-                        ]) {
-
-                            sh '''
-                                echo "Starting SonarQube Analysis..."
-
-                                npx @sonar/scan \
-                                -Dsonar.projectKey=NetflixClone \
-                                -Dsonar.projectName=NetflixClone \
-                                -Dsonar.sources=src \
-                                -Dsonar.exclusions=node_modules/**,dist/**,public/** \
-                                -Dsonar.host.url=$SONAR_HOST_URL \
-                                -Dsonar.token=$SONAR_AUTH_TOKEN
-                            '''
-                        }
+                        // Run SonarQube scanner using npx (no global install)
+                        sh '''
+                        echo "🔍 Starting SonarQube Analysis..."
+                        npx @sonar/scan \
+                        -Dsonar.projectKey=NetflixClone \
+                        -Dsonar.projectName=NetflixClone \
+                        -Dsonar.sources=src \
+                        -Dsonar.language=ts \
+                        -Dsonar.exclusions=dist/**,node_modules/**,public/** \
+                        -Dsonar.host.url=$SONAR_HOST_URL \
+                        -Dsonar.login=$SONAR_AUTH_TOKEN
+                        '''
                     }
                 }
             }
         }
-
-
-        stage('Quality Gate') {
+        stage("Quality Gate") {
             steps {
-                script {
-                    waitForQualityGate(
-                        abortPipeline: false,
-                        credentialsId: 'sonar-token'
-                    )
-                }
-            }
-        }
-
-
-        stage('OWASP Dependency Check') {
-
-            steps {
-
-                dir('Application-Code') {
-
-                    echo "Running OWASP Dependency Check..."
-
-                    dependencyCheck(
-                        additionalArguments: '''
-                            --scan .
-                            --format XML
-                            --out .
-                            --exclude node_modules
-                        ''',
-                        odcInstallation: 'owasp-dp-check'
-                    )
-
-
-                    dependencyCheckPublisher(
-                        pattern: '**/dependency-check-report.xml'
-                    )
-                }
-            }
-        }
-
-
-        stage('TRIVY Filesystem Scan') {
-
-            steps {
-
-                dir('Application-Code') {
-
-                    sh '''
-                        echo "Running Trivy filesystem scan..."
-
-                        trivy fs \
-                        --scanners vuln \
-                        --severity HIGH,CRITICAL \
-                        . > trivyfs.txt
-                    '''
-                }
-            }
-        }
-
-
-        stage('Docker Image Build') {
-
-            steps {
-
-                dir('Application-Code') {
-
                     script {
-
-                        sh '''
-                            echo "Current directory:"
-                            pwd
-
-                            echo "Docker build context:"
-                            ls -la
-                        '''
-
-
-                        withDockerRegistry(
-                            credentialsId: 'docker',
-                            toolName: 'docker'
-                        ) {
-
-                            withCredentials([
-                                string(credentialsId: 'tmdb-api', variable: 'TMDB_API_KEY')
-                            ]) {
-
-                                sh '''
-                                    echo "Building Docker image..."
-
-                                    docker build \
-                                    --build-arg TMDB_V3_API_KEY="$TMDB_API_KEY" \
-                                    -t abdurakhimovda522/netflix:latest .
-                                '''
+                        waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
+                    }
+                } 
+            }
+        stage('OWASP Dependency Check') {
+            steps {
+                dir('Application-Code') {
+                    echo "🔒 Running OWASP Dependency Check..."
+                    dependencyCheck additionalArguments: '--scan ./ --format XML --out .', odcInstallation: 'owasp-dp-check'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                }
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                dir('Application-Code') {
+                    sh "trivy fs . > trivyfs.txt"
+                }
+            }
+        }
+        stage("Docker Image Build"){
+            steps{
+                dir('Application-Code') {
+                    script{
+                       withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                           
+                           withCredentials([string(credentialsId: 'tmdb-api', variable: 'TMDB_API_KEY')]) {
+                                sh """
+                                  docker build --build-arg TMDB_V3_API_KEY=$TMDB_API_KEY -t netflix . 
+                                """
                             }
                         }
                     }
                 }
             }
         }
-
-
-        stage('Docker Image Push') {
-
-            steps {
-
-                script {
-
-                    withDockerRegistry(
-                        credentialsId: 'docker',
-                        toolName: 'docker'
-                    ) {
-
-                        sh '''
-                            echo "Pushing Docker image..."
-
-                            docker push abdurakhimovda522/netflix:latest
-                        '''
+        stage("Docker Image Pushing"){
+            steps{
+                dir('Application-Code') {
+                    script{
+                       withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                           sh "docker tag netflix abdurakhimovda522/netflix:latest "
+                           sh "docker push abdurakhimovda522/netflix:latest "
+                        }
                     }
                 }
             }
         }
-
-
-        stage('TRIVY Image Scan') {
-
-            steps {
-
-                sh '''
-                    echo "Scanning Docker image..."
-
-                    trivy image \
-                    --severity HIGH,CRITICAL \
-                    abdurakhimovda522/netflix:latest \
-                    > trivyimage.txt
-                '''
+        stage("TRIVY Image Scan"){
+            steps{
+                sh "trivy image abdurakhimovda522/netflix:latest > trivyimage.txt" 
             }
         }
-
-
         stage('Deploy to Kubernetes') {
-
             steps {
-
-                dir('Kubernetes') {
-
-                    withKubeConfig(credentialsId: 'k8s') {
-
-                        sh '''
-                            echo "Deploying application..."
-
-                            kubectl apply -f deployment.yml
-                            kubectl apply -f service.yml
-
-                            kubectl rollout restart deployment netflix || true
-
-                            kubectl rollout status deployment netflix
-
-                            kubectl get svc
-                            kubectl get all
-                        '''
+                script {
+                    dir('Kubernetes') {
+                        withKubeConfig(credentialsId: 'k8s') {
+                            sh 'kubectl apply -f deployment.yml'
+                            sh 'kubectl apply -f service.yml'
+                            sh 'kubectl get svc'
+                            sh 'kubectl get all'
+                        }
                     }
                 }
             }
         }
     }
-
-
     post {
-
         always {
-
             script {
-
-                def colorCode =
-                    currentBuild.result == 'SUCCESS' ? '#2eb886' :
-                    currentBuild.result == 'FAILURE' ? '#ff0000' :
-                    '#daa038'
-
-
+                def colorCode = currentBuild.result == 'SUCCESS' ? '#2eb886' : 
+                                currentBuild.result == 'FAILURE' ? '#ff0000' : '#daa038'
+    
                 slackSend(
                     channel: '#all-sabr',
                     color: colorCode,
                     message: """
                     *🚀 Jenkins Build Notification*
-
                     *Project:* ${env.JOB_NAME}
                     *Build Number:* #${env.BUILD_NUMBER}
-                    *Status:* ${currentBuild.result}
+                    *Status:* *${currentBuild.result}*
                     *URL:* <${env.BUILD_URL}|Open Build>
-
-                    ${currentBuild.result == 'SUCCESS'
-                    ? '✅ All steps completed successfully!'
-                    : '❌ Build failed. Check Jenkins logs.'}
-                    """
+    
+                    ${currentBuild.result == 'SUCCESS' ? '✅ All steps completed successfully!' : 
+                    currentBuild.result == 'FAILURE' ? '❌ Build failed. Please check logs.' : 
+                    '⚠️ Build is unstable or aborted.'}
+                    """.stripIndent()
                 )
             }
         }
     }
-}
+} 
