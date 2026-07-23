@@ -830,6 +830,46 @@ settings:
 
 <img width="1063" height="540" alt="Screenshot 2026-07-22 at 7 32 54 AM" src="https://github.com/user-attachments/assets/71ca94fb-3734-40b5-a433-f4df5f0cabfd" />
 
+## Troubleshooting: `libatomic.so.1` Error During `npm install`
+
+### Error
+
+While running `npm install`, the following error occurred:
+
+```text
+node: error while loading shared libraries: libatomic.so.1: cannot open shared object file: No such file or directory
+script returned exit code 127
+```
+
+<img width="1887" height="552" alt="Screenshot 2026-07-23 at 10 34 16 AM" src="https://github.com/user-attachments/assets/d3f65a3c-b7b5-4a57-a3f4-97e4aed6ad2c" />
+
+### Cause
+
+The installed Node.js binary was unable to start because it depended on the `libatomic.so.1` shared library, which was not available in the current environment. This typically happens when Node.js is installed from an incompatible source or the installation is incomplete.
+
+### Solution
+
+The issue was resolved by reinstalling Node.js and npm using a compatible installation method for the operating system (Ubuntu 24.04). After reinstalling, the `node` binary no longer required the missing library, and `npm install` executed successfully.
+
+### Verification
+
+Verify the installation with the following commands:
+
+```bash
+node -v
+npm -v
+```
+
+Then rerun:
+
+```bash
+npm install
+```
+
+If both commands return the installed versions and `npm install` completes successfully, the issue has been resolved.
+
+<img width="1268" height="260" alt="Screenshot 2026-07-23 at 11 07 43 AM" src="https://github.com/user-attachments/assets/bc8f99ce-5a2d-4b96-b915-328c64e0995d" />
+
 - If you see our Jenkins Pipeline has failed at OWASP DP Check, which means things are going as expected.
 - Why does it fail at the OWASP DP Check? Because we did not install & configure OWASP DP on Jenkins.
 
