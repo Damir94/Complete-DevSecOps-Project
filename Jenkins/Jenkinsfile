@@ -76,7 +76,13 @@ pipeline{
                            
                            withCredentials([string(credentialsId: 'tmdb-api', variable: 'TMDB_API_KEY')]) {
                                 sh '''
-                                docker build --build-arg TMDB_V3_API_KEY=${TMDB_API_KEY} -t netflix .  
+                                    echo "Building Docker image ..."
+                                    pwd
+                                    ls -la
+                                    
+                                    docker build \
+                                    --build-arg TMDB_V3_API_KEY=$TMDB_API_KEY \
+                                    -t netflix .  
                                 '''
                             }
                         }
