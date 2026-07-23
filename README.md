@@ -893,43 +893,39 @@ If both commands return the installed versions and `npm install` completes succe
 
 <img width="1739" height="710" alt="Screenshot 2026-07-23 at 11 15 26 AM" src="https://github.com/user-attachments/assets/f6c0c6a7-ba5f-419f-9aad-ddd522673dfc" />
 
-- Now, run the pipeline again
+- Now, run the pipeline again and Pipeline is Successful for OWASP
 
-<img width="720" height="322" alt="1_2AY9dEgTJ-sFM2hc0-4-lA" src="https://github.com/user-attachments/assets/64174b6c-3b29-4cb3-85e8-62dc08dcc423" />
-
-- Pipeline is Successful for OWASP
-
-<img width="720" height="244" alt="1_cycKRCm2gvaW5TdTSXkEnA" src="https://github.com/user-attachments/assets/b02c3fad-408b-4a7e-9845-22cdd9f4fa91" />
+<img width="1913" height="914" alt="Screenshot 2026-07-23 at 12 07 30 PM" src="https://github.com/user-attachments/assets/bc45c498-2651-4d7c-af2d-c37f5102f33d" />
 
 - We got the slack alert
 
-<img width="720" height="242" alt="1_MC0MYkSa-7WXNZVohbp4Gg" src="https://github.com/user-attachments/assets/c3079306-eb91-45b2-8253-0201202ebe51" />
+<img width="1065" height="352" alt="Screenshot 2026-07-23 at 11 51 24 AM" src="https://github.com/user-attachments/assets/b760a103-9cb8-4487-b99b-fe80cbf3be73" />
 
 - Validate DP Check
 
-<img width="720" height="220" alt="1_BREEJZRNxQNSxguFLkg3fA" src="https://github.com/user-attachments/assets/a2273125-c292-42c4-a9cb-53349eb95ec2" />
+<img width="1891" height="591" alt="Screenshot 2026-07-23 at 12 08 15 PM" src="https://github.com/user-attachments/assets/00c74b4c-df18-4910-a474-4b1f4ed852d7" />
 
-<img width="720" height="383" alt="1_g8QGIlilmzfQzytvElc93Q" src="https://github.com/user-attachments/assets/975ffb16-c13e-47b7-922f-08e418dfbc07" />
+<img width="1910" height="802" alt="Screenshot 2026-07-23 at 12 08 28 PM" src="https://github.com/user-attachments/assets/c4c06e3f-efc9-42cb-8411-8e7d005c04ee" />
 
 - As our Pipeline is failing, we have to set up Docker on our Jenkins
 - We have to add one credential for our Docker Hub, as we will be pushing our Docker images to Docker Hub
 - For that, we will have to generate a Personal Access Token
 
-<img width="720" height="243" alt="1_xlylbq8UD9UtetIwV3AS7w" src="https://github.com/user-attachments/assets/0209c26b-cf8f-4a61-810c-da006dcbbdcb" />
+<img width="1329" height="640" alt="Screenshot 2026-07-23 at 12 10 35 PM" src="https://github.com/user-attachments/assets/6179d580-5157-493c-9c44-1a491dc34156" />
 
 - Once you have generated the PAT, add it to Jenkins
 
-<img width="720" height="393" alt="1_ZNGb9-OeVRU7kleqlLWzAA" src="https://github.com/user-attachments/assets/7b0d9656-3a81-409a-a46b-3cf4a18cd94f" />
+<img width="1581" height="794" alt="Screenshot 2026-07-23 at 12 13 52 PM" src="https://github.com/user-attachments/assets/fe8b1dd2-92b1-42e5-93fa-42b608b40c92" />
 
 - Now, install the Docker plugin for building the images with Jenkins
 
-<img width="720" height="232" alt="1_Tbdk0dXR0JCiFmDkiuqKEA" src="https://github.com/user-attachments/assets/7a4f4e3a-1daf-4310-b117-ef2231278f80" />
+<img width="1609" height="593" alt="Screenshot 2026-07-23 at 12 15 04 PM" src="https://github.com/user-attachments/assets/f47900cf-62ee-4a1e-8e66-b6535f235bf4" />
 
 - Once the plugin is installed. Now, we have to get the API Key to watch some Netflix movies. So we will use TMDB to get the API- https://www.themoviedb.org/
 - You should create the account before using this.
 - Go to the Settings under your profile on TMDB
 
-<img width="720" height="340" alt="1_nLE5MVcmZByMNvGantmPJQ" src="https://github.com/user-attachments/assets/15d5a8b7-468c-4010-a496-40923474f8a7" />
+<img width="1429" height="685" alt="Screenshot 2026-07-23 at 12 21 17 PM" src="https://github.com/user-attachments/assets/6a36b930-54ff-49a1-994f-2f2049039c3b" />
 
 - Click on API
 
@@ -945,7 +941,8 @@ If both commands return the installed versions and `npm install` completes succe
 
 - After adding the secrets, we have to configure the Docker tool
 
-<img width="720" height="379" alt="1_w2G2ySs7yjxoc0oL2zKg6Q" src="https://github.com/user-attachments/assets/5957e4ec-633d-40b2-b5aa-544d3bf2b591" />
+<img width="1417" height="685" alt="Screenshot 2026-07-23 at 12 25 32 PM" src="https://github.com/user-attachments/assets/5ace42ba-7bce-4275-9a4b-14490ef01d96" />
+
 
 - Now, run the pipeline again
 
