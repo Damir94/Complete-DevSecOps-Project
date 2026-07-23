@@ -924,16 +924,10 @@ If both commands return the installed versions and `npm install` completes succe
 - Once the plugin is installed. Now, we have to get the API Key to watch some Netflix movies. So we will use TMDB to get the API- https://www.themoviedb.org/
 - You should create the account before using this.
 - Go to the Settings under your profile on TMDB
+- Click on API
+-  Now, we have new API Key
 
 <img width="1429" height="685" alt="Screenshot 2026-07-23 at 12 21 17 PM" src="https://github.com/user-attachments/assets/6a36b930-54ff-49a1-994f-2f2049039c3b" />
-
-- Click on API
-
-<img width="720" height="245" alt="1_Dyj_NYnmQQli0GLsdc_Hhg" src="https://github.com/user-attachments/assets/878a3c98-ad21-4f8c-ad4a-48edf5d0c271" />
-
-- Now, we have new API Key
-
-<img width="720" height="302" alt="1_-2oU4_LKbHJdXIUM21kAaw" src="https://github.com/user-attachments/assets/3a383e4f-efc3-4543-955d-06b936b1fbec" />
 
 - Now, we will have to create credentials in our Jenkins for the TMBD API key
 
