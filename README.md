@@ -891,7 +891,7 @@ If both commands return the installed versions and `npm install` completes succe
 - Go to Manage Plugins -> Tools and look for Dependency-Check
 - Make sure to select the Install Automatically and should be GitHub
 
-<img width="720" height="303" alt="1_Gv1NXewWVJmx-eIDSzzCJA" src="https://github.com/user-attachments/assets/613b9956-6584-45bd-8a77-b9df2a604206" />
+<img width="1739" height="710" alt="Screenshot 2026-07-23 at 11 15 26 AM" src="https://github.com/user-attachments/assets/f6c0c6a7-ba5f-419f-9aad-ddd522673dfc" />
 
 - Now, run the pipeline again
 
