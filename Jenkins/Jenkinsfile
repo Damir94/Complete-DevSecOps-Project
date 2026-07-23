@@ -91,8 +91,8 @@ pipeline{
                 dir('Application-Code') {
                     script{
                        withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                           sh "docker tag netflix avian19/netflix:latest "
-                           sh "docker push avian19/netflix:latest "
+                           sh "docker tag netflix abdurakhimovda522/netflix:latest "
+                           sh "docker push abdurakhimovda522/netflix:latest "
                         }
                     }
                 }
@@ -100,7 +100,7 @@ pipeline{
         }
         stage("TRIVY Image Scan"){
             steps{
-                sh "trivy image avian19/netflix:latest > trivyimage.txt" 
+                sh "trivy image abdurakhimovda522/netflix:latest > trivyimage.txt" 
             }
         }
         stage('Deploy to Kubernetes') {
