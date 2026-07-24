@@ -937,16 +937,13 @@ If both commands return the installed versions and `npm install` completes succe
 
 <img width="1417" height="685" alt="Screenshot 2026-07-23 at 12 25 32 PM" src="https://github.com/user-attachments/assets/5ace42ba-7bce-4275-9a4b-14490ef01d96" />
 
-
 - Now, run the pipeline again
 
-<img width="720" height="290" alt="1_wbglNVyuO0U6WnhH6Ttmmg" src="https://github.com/user-attachments/assets/3c2e970e-7c8a-44f3-ac77-e2fae7b95d4c" />
-
-<img width="720" height="229" alt="1_Ce7Kj1irJdndFKTZqsaCiQ" src="https://github.com/user-attachments/assets/4555ec55-9098-434c-8fc4-0538dbb842b6" />
+<img width="1909" height="674" alt="Screenshot 2026-07-24 at 6 42 07 AM" src="https://github.com/user-attachments/assets/b9a013ad-7ce8-4186-9c06-d1931e7f729e" />
 
 - You can see our Docker Image has been pushed to Docker Hub
 
-<img width="720" height="180" alt="1_bUfCR99vXRf69KgMob_BOA" src="https://github.com/user-attachments/assets/594620a5-00e1-4f98-b86e-813e3ba8d327" />
+<img width="961" height="575" alt="Screenshot 2026-07-24 at 6 43 05 AM" src="https://github.com/user-attachments/assets/66a2a443-e4b8-4a88-8a11-021cdfe0007f" />
 
 ### Conclusion
 - By now, you’ve transformed Jenkins from a static CI tool into a full-blown DevSecOps automation machine.
