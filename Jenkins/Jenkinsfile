@@ -14,7 +14,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/Damir94/Complete-DevSecOps-Project.git'
+                git branch: 'master', url: 'https://github.com/Damir94/Complete-DevSecOps-Project.git'
             }
         }
         stage('Install Dependencies') {
@@ -57,7 +57,7 @@ pipeline{
 //                dir('Application-Code') {
 //                    echo "🔒 Running OWASP Dependency Check..."
 //                    dependencyCheck additionalArguments: '--scan ./ --format XML --out .', odcInstallation: 'owasp-dp-check'
-//                   dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+//                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
 //                }
 //            }
 //        }
@@ -77,9 +77,8 @@ pipeline{
                            withCredentials([string(credentialsId: 'tmdb-api', variable: 'TMDB_API_KEY')]) {
                                 sh """
                                     docker build \
-                                    --build-arg TMDB_V3_API_KEY=$TMDB_API_KEY \
-                                    -t netflix \
-                                    .
+                                    --build-arg TMDB_V3_API_KEY=${TMDB_API_KEY} \
+                                    -t netflix .
                                 """
                             }
                         }
