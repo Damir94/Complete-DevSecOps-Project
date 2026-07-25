@@ -7,6 +7,10 @@ locals {
   ]
 }
 
+data "aws_key_pair" "existing" {
+  key_name = "devops-demo"
+}
+
 resource "aws_instance" "ec2" {
   count                  = var.ec2-instance-count
   ami                    = data.aws_ami.ubuntu.id
@@ -14,6 +18,8 @@ resource "aws_instance" "ec2" {
   instance_type          = var.ec2_instance_type[count.index]
   iam_instance_profile   = aws_iam_instance_profile.iam-instance-profile.name
   vpc_security_group_ids = [aws_security_group.default-ec2-sg.id]
+  key_name = data.aws_key_pair.existing.key_name
+
   root_block_device {
     volume_size = var.ec2_volume_size
     volume_type = var.ec2_volume_type
