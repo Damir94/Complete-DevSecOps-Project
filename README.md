@@ -28,11 +28,6 @@ Before diving in, make sure you’ve got these handy:
   - GitHub repo for your Terraform code
   - Optional: Patience, because the first terraform apply always takes longer than you expect
 
-### HandsOn
-Directory Structure for the Terraform Code
-
-<img width="720" height="320" alt="1_XqV7MdxvDyVPEOxh9BJ0NA" src="https://github.com/user-attachments/assets/6d5c82ea-c321-40f8-9125-31a6596f63a7" />
-
 ### Terraform Scripts for EC2 and other AWS Services(IAM, VPC,etc)
 
 ```hcl
