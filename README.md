@@ -1140,135 +1140,28 @@ kubeadm join 10.0.35.70:6443 --token 8paztu.<token> \
 sudo cat /etc/kubernetes/admin.conf
 ```
 
+<img width="880" height="601" alt="Screenshot 2026-07-25 at 12 26 20 PM" src="https://github.com/user-attachments/assets/5512c3cc-12a2-47a4-90c2-96605f78448d" />
+
+
 <img width="720" height="156" alt="1_s6WMbLTpyLkx4hlitImS8w" src="https://github.com/user-attachments/assets/70062691-3a75-4514-9a14-04ee8f4865ee" />
 
 <img width="720" height="345" alt="1_n-1iJUL3s6P8K3-VcPVarA" src="https://github.com/user-attachments/assets/a089db64-4b63-454d-9e3b-ec25100217f8" />
 
-- Search
-```bash
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-overlay
-br_netfilter
-EOF
-```
+- Run the pipeline.
 
-```bash
-sudo modprobe overlay
-sudo modprobe br_netfilter
-```
+<img width="1320" height="430" alt="Screenshot 2026-07-26 at 1 13 43 PM" src="https://github.com/user-attachments/assets/310035b1-046b-49b5-b724-33b5382c515a" />
 
-```bash
-# sysctl params required by setup, params persist across reboots
-cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-iptables  = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.ipv4.ip_forward                 = 1
-EOF
-```
-
-```bash
-# Apply sysctl params without reboot
-sudo sysctl --system
-```
-
-<img width="720" height="253" alt="1_WhpZPyHe4QFxL_cvOKlp-g" src="https://github.com/user-attachments/assets/f3d36707-428f-4cb6-984a-88db58d950ae" />
-
-```bash
-sudo swapoff -a
-(crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
-```
-
-<img width="720" height="29" alt="1_oNt3WL86HjCoKQeJkP33uw" src="https://github.com/user-attachments/assets/5f75095c-a0fc-4f39-a9bc-c9a44f7f46c4" />
-
-```bash
-# Root User
-sudo so
-# Kuernetes Variable Declaration
-KUBERNETES_VERSION=v1.33
-CRIO_VERSION=v1.33v
-```
-
-```bash
-# Apply sysctl params without reboot
-sudo sysctl --system
-```
-
-```bash
-sudo apt-get update -y
-sudo apt-get install -y apt-transport-https ca-certificates curl gpg
-```
-
-```bash
-## Install CRIO Runtime
-sudo apt-get update -y
-apt-get install -y software-properties-common curl apt-transport-https ca-certificates
-```
-
-```bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/Release.key |
-    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-```
-
-```bash
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/$CRIO_VERSION/deb/ /" |
-    tee /etc/apt/sources.list.d/cri-o.list
-```
-
-```bash
-sudo apt-get update -y
-sudo apt-get install -y cri-o
-```
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable crio --now
-sudo systemctl start crio.service
-```
-
-```bash
-echo "CRI runtime installed susccessfully"
-```
-
-<img width="720" height="336" alt="1_XYoPYw4R8G_w0pJN0fnyvQ" src="https://github.com/user-attachments/assets/737be250-0723-451c-b881-64083e816a10" />
-
-```bash
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-```
-
-```bash
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/deb/ /" | \
-sudo tee /etc/apt/sources.list.d/kubernetes.list
-```
-
-<img width="720" height="64" alt="1_DT-F6AmeY926ydA72yI5kw" src="https://github.com/user-attachments/assets/6619ab24-fb35-4f42-bd30-4c6fdea0e387" />
-
-```bash
-sudo apt-get update -y
-sudo apt-get install -y kubelet kubeadm kubectl
-```
-
-<img width="720" height="220" alt="1_OGdci6nAfyUYnxEcMgPqWw" src="https://github.com/user-attachments/assets/510849a1-e834-44b3-9f40-4f893c575aac" />
-
-```bash
-systemctl restart kubelet.service
-systemctl enable kubelet.service
-```
-
-- Re-run the pipeline.
-
-<img width="720" height="395" alt="1_-xJeycq0KrPFqgYIgpxMkA" src="https://github.com/user-attachments/assets/fd249c1b-531f-44bd-9c88-3f27bbb670a6" />
 
 - Check the Pods and all resources of Kubernetes
 ```bash
 kubectl get all -n default
 ```
 
-<img width="720" height="150" alt="1_AXvnL9UTaH22FeE8VxWTig" src="https://github.com/user-attachments/assets/36f2fa8c-7680-4951-9bdf-18328f9e251c" />
+<img width="977" height="452" alt="Screenshot 2026-07-26 at 1 10 40 PM" src="https://github.com/user-attachments/assets/bcc51d90-743b-4e4c-b08f-9b871eb9bce7" />
 
 - Access the Application
 
-<img width="720" height="416" alt="1_hiGQC28LKZsO5agc8CvCMg" src="https://github.com/user-attachments/assets/e32c6ad9-d677-43d7-b16f-406161515adf" />
+<img width="1892" height="822" alt="Screenshot 2026-07-26 at 1 13 10 PM" src="https://github.com/user-attachments/assets/27a2d75c-f9a4-475c-b1cc-74bcb603451f" />
 
 ### Conclusion — What’s Next
 - Your app’s now alive inside Kubernetes — scalable, containerised, and running smoothly.
