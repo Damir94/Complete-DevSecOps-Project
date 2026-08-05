@@ -1,6 +1,7 @@
 # Building a Complete DevSecOps Project 
 
-<img width="1000" height="558" alt="1_50Xa4Lct9GaJBhUsuN337g" src="https://github.com/user-attachments/assets/44e1d043-1fae-4462-bc67-00d278b74ec6" />
+<img width="1619" height="972" alt="file_00000000700881fd885173c6124ca7f7" src="https://github.com/user-attachments/assets/624284c7-7bc6-4db7-afb6-f947da4d8cef" />
+
 
 ## Automating AWS Infrastructure with Terraform Cloud & GitHub Actions
 
