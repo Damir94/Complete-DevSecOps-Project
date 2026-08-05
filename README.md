@@ -1,4 +1,4 @@
-# Building a Complete DevSecOps Project 
+# Building a Production-Style DevSecOps CI/CD Pipeline with AWS, Kubernetes & Jenkins.
 
 <img width="1619" height="972" alt="file_00000000700881fd885173c6124ca7f7" src="https://github.com/user-attachments/assets/624284c7-7bc6-4db7-afb6-f947da4d8cef" />
 
